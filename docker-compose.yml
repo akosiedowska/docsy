@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: docsy
+      POSTGRES_PASSWORD: docsy
+      POSTGRES_DB: docsy
+    ports:
+      - "5433:5432"
+    volumes:
+      - docsy_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U docsy"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  docsy_pg_data:

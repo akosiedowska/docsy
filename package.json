@@ -1,0 +1,24 @@
+{
+  "name": "docsy",
+  "version": "0.0.0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "npx prettier --write"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akosiedowska/docsy.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/akosiedowska/docsy/issues"
+  },
+  "homepage": "https://github.com/akosiedowska/docsy#readme",
+  "devDependencies": {
+    "prettier": "^3.9.6"
+  }
+}
