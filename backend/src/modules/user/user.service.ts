@@ -49,15 +49,19 @@ const updateUserById = async (id: string, userData: UpdateUserBody) => {
     throw new NotFoundError('User not found')
   }
 
-  const userEmailInDb = await prisma.user.findUnique({
-    where: { email: userData.email },
-  })
+  if (userData.email) {
+    const userEmailInDb = await prisma.user.findUnique({
+      where: { email: userData.email },
+    })
 
-  if (userEmailInDb && userEmailInDb.id !== id) {
-    throw new ConflictError('Email already used')
+    if (userEmailInDb && userEmailInDb.id !== id) {
+      throw new ConflictError('Email already used')
+    }
   }
 
-  const hashedPassword = await bcrypt.hash(userData.password, 12)
+  const hashedPassword = userData.password
+    ? await bcrypt.hash(userData.password, 12)
+    : undefined
 
   const result = await prisma.user.update({
     where: { id },

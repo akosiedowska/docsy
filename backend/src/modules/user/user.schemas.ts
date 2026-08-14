@@ -14,7 +14,7 @@ export const updateUserBodySchema = z.object({
   lastName: z.string().min(1),
   email: z.email(),
   password: z.string().min(8),
-})
+}).partial()
 
 export type UpdateUserBody = z.infer<typeof updateUserBodySchema>
 

@@ -1,7 +1,7 @@
 import type { FastifyPluginAsyncZod } from "fastify-type-provider-zod"
 import { z } from 'zod'
 import { userController } from "./user.controller"
-import { allUsersResponseSchema, createUserBodySchema, userIdParamsSchema, userResponseSchema } from './user.schemas'
+import { allUsersResponseSchema, createUserBodySchema, updateUserBodySchema, userIdParamsSchema, userResponseSchema } from './user.schemas'
 
 export const userRoutes: FastifyPluginAsyncZod = async (fastify) => {
     fastify.post(
@@ -47,6 +47,7 @@ export const userRoutes: FastifyPluginAsyncZod = async (fastify) => {
       {
         schema: {
           params: userIdParamsSchema,
+          body: updateUserBodySchema,
           response: {
             200: userResponseSchema,
           },
