@@ -1,14 +1,20 @@
 export class HttpError extends Error {
-    statusCode: number
+  statusCode: number
 
-    constructor(statusCode: number, message: string) {
-        super(message)
-        this.statusCode = statusCode
-    }
+  constructor(statusCode: number, message: string) {
+    super(message)
+    this.statusCode = statusCode
+  }
 }
 
 export class ConflictError extends HttpError {
-    constructor(message: string) {
-        super(409, message)
-    }
+  constructor(message: string) {
+    super(409, message)
+  }
+}
+
+export class NotFoundError extends HttpError {
+  constructor(message: string) {
+    super(404, message)
+  }
 }
