@@ -1,6 +1,6 @@
 import { createBrowserRouter } from 'react-router'
 
-import LoginPage from '../pages/auth/Loginpage'
+import LoginPage from '../pages/auth/LoginPage'
 import RegisterPage from '../pages/auth/RegisterPage'
 import DashboardPage from '../pages/patient/DashboardPage'
 import DashboardLayout from '../layouts/DashboardLayout'
