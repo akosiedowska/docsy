@@ -3,10 +3,14 @@ export type LoginPayload = {
     password: string
 }
 
-export type AuthResponse = {
+export type AuthUser = {
     id: string
     email: string
     firstName: string
     lastName: string
-    role: string
+}
+
+export type AuthResponse = {
+    accessToken: string
+    user: AuthUser
 }

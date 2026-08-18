@@ -4,6 +4,8 @@ import { prisma } from '../../db/prisma'
 import { ConflictError, NotFoundError } from '../../errors/http-error'
 import type { CreateUserBody, UpdateUserBody, UserIdParams } from './user.schemas'
 
+const SALT_ROUNDS = 12
+
 const createUser = async (userData: CreateUserBody) => {
   const userInDb = await prisma.user.findUnique({
     where: { email: userData.email },
@@ -13,7 +15,7 @@ const createUser = async (userData: CreateUserBody) => {
     throw new ConflictError('A user with the provided email already exists')
   }
 
-  const hashedPassword = await bcrypt.hash(userData.password, 12)
+  const hashedPassword = await bcrypt.hash(userData.password, SALT_ROUNDS)
 
   const result = await prisma.user.create({
     data: {

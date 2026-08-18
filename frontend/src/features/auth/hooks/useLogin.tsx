@@ -8,6 +8,6 @@ export function useLogin() {
   const setSession = useAuthStore((s) => s.setSession)
   return useMutation({
     mutationFn: loginRequest,
-    onSuccess: (data : AuthResponse) => setSession(data),
+    onSuccess: (data: AuthResponse) => setSession(data.user, data.accessToken),
   });
 }
