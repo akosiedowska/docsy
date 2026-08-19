@@ -3,6 +3,7 @@ import { RouterProvider } from 'react-router'
 import { AppProviders } from './app/providers'
 import { router } from './app/router'
 
+import '@fontsource-variable/inter/wght.css'
 import './App.css'
 
 function App() {
