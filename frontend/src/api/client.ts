@@ -18,10 +18,11 @@ apiClient.interceptors.request.use((config) => {
 apiClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
-    if (error.response?.status === 401) {
-      // session expired/invalid — clear local state and bounce to login
-      // e.g. useAuthStore.getState().clearSession()
-      window.location.href = "/login";
+    const hadToken = Boolean(error.config?.headers?.get?.("Authorization"))
+    if (error.response?.status === 401 && hadToken) {
+      // an authenticated request came back unauthorized — session expired, bounce to login
+      useAuthStore.getState().clearSession()
+      window.location.href = '/'
     }
     return Promise.reject(error);
   },
