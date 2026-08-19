@@ -7,12 +7,25 @@ import { useRegister } from "../hooks/useRegister";
 import { signupSchema, type SignupFormValues } from "../schemas";
 import type { RegisterPayload } from "../types";
 
+const signupFields: readonly (keyof SignupFormValues)[] = [
+  "firstName",
+  "lastName",
+  "email",
+  "password",
+  "confirmPassword",
+];
+
+function isSignupField(field: string): field is keyof SignupFormValues {
+  return (signupFields as readonly string[]).includes(field);
+}
+
 export function RegisterForm() {
   const navigate = useNavigate();
   const { mutate, isPending, error } = useRegister();
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<SignupFormValues>({ resolver: zodResolver(signupSchema) });
 
@@ -23,8 +36,21 @@ export function RegisterForm() {
       email: values.email,
       password: values.password,
     };
-    mutate(payload, { onSuccess: () => navigate("/") });
+    mutate(payload, {
+      onSuccess: () => navigate("/"),
+      onError: (err) => {
+        const issues = err.response?.data?.issues ?? [];
+        issues.forEach((issue) => {
+          const field = issue.instancePath.replace(/^\//, "");
+          if (isSignupField(field)) {
+            setError(field, { message: issue.message });
+          }
+        });
+      },
+    });
   };
+
+  const hasFieldIssues = (error?.response?.data?.issues?.length ?? 0) > 0;
 
   return (
     <Paper elevation={2} sx={{ p: 4, maxWidth: 400, mx: "auto", mt: 8 }}>
@@ -37,7 +63,11 @@ export function RegisterForm() {
         noValidate
         sx={{ display: "flex", flexDirection: "column", gap: 2 }}
       >
-        {error && <Alert severity="error">Could not create account. Please try again.</Alert>}
+        {error && !hasFieldIssues && (
+          <Alert severity="error">
+            {error.response?.data?.message ?? "Could not create account. Please try again."}
+          </Alert>
+        )}
         <TextField
           label="First name"
           autoComplete="given-name"

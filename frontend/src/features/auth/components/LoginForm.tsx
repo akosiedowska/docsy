@@ -32,20 +32,8 @@ export function LoginForm() {
         const redirectTo = from ? `${from.pathname}${from.search}` : '/dashboard'
         navigate(redirectTo, { replace: true })
       },
-      onError: (err) => {
-        console.log('ERROR', err)
-      },
     })
   }
-useEffect(() => {
-console.log('message', message)
-}, [message])
-useEffect(() => {
-console.log('from', from)
-}, [from])
-useEffect(() => {
-console.log('error', error)
-}, [error])
 
   return (
     <Paper elevation={2} sx={{ p: 4, maxWidth: 400, mx: "auto", mt: 8 }}>

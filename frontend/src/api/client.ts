@@ -20,7 +20,6 @@ apiClient.interceptors.response.use(
   (error: AxiosError) => {
     const hadToken = Boolean(error.config?.headers?.get?.("Authorization"))
     if (error.response?.status === 401 && hadToken) {
-      // an authenticated request came back unauthorized — session expired, bounce to login
       useAuthStore.getState().clearSession()
       window.location.href = '/'
     }
