@@ -1,7 +1,7 @@
 {
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
-  "editor.formatOnSaveMode": "modifications",
+  "editor.formatOnSaveMode": "file",
   "editor.tabSize": 2,
   "editor.insertSpaces": true,
   // "[javascript]": {
