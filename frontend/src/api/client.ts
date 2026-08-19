@@ -1,4 +1,4 @@
-import axios, {AxiosError} from "axios";
+import axios, {AxiosError, type InternalAxiosRequestConfig} from "axios";
 
 import { useAuthStore } from "../stores/authStore";
 
@@ -15,14 +15,47 @@ apiClient.interceptors.request.use((config) => {
   return config
 })
 
+let refreshPromise: Promise<string> | null = null
+
+function refreshAccessToken(): Promise<string> {
+  if (!refreshPromise) {
+    refreshPromise = apiClient
+      .post<{ accessToken: string }>("/auth/refresh")
+      .then((r) => {
+        useAuthStore.getState().setAccessToken(r.data.accessToken)
+        return r.data.accessToken
+      })
+      .finally(() => {
+        refreshPromise = null
+      })
+  }
+  return refreshPromise
+}
+
 apiClient.interceptors.response.use(
   (response) => response,
-  (error: AxiosError) => {
-    const hadToken = Boolean(error.config?.headers?.get?.("Authorization"))
-    if (error.response?.status === 401 && hadToken) {
+  async (error: AxiosError) => {
+    const originalRequest = error.config as (InternalAxiosRequestConfig & { _retry?: boolean }) | undefined
+    const url = originalRequest?.url ?? ""
+
+    if (url.includes("/auth/refresh") || url.includes("/auth/login")) {
+      return Promise.reject(error)
+    }
+
+    if (error.response?.status !== 401 || !originalRequest || originalRequest._retry) {
+      return Promise.reject(error)
+    }
+
+    originalRequest._retry = true
+
+    try {
+      const newAccessToken = await refreshAccessToken()
+      originalRequest.headers.set("Authorization", `Bearer ${newAccessToken}`)
+      return apiClient(originalRequest)
+    } catch (refreshError) {
       useAuthStore.getState().clearSession()
       window.location.href = '/'
+      return Promise.reject(refreshError)
     }
-    return Promise.reject(error);
   },
 )

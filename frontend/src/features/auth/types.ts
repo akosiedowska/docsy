@@ -24,6 +24,10 @@ export type RegisterPayload = {
 
 export type RegisterResponse = AuthUser
 
+export type RefreshResponse = {
+    accessToken: string
+}
+
 export type ValidationIssue = {
     instancePath: string
     message: string

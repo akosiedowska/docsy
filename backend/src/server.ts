@@ -1,6 +1,7 @@
 import 'dotenv/config'
 import Fastify from 'fastify'
 import cors from '@fastify/cors'
+import cookie from '@fastify/cookie'
 import jwt from '@fastify/jwt'
 import { ZodTypeProvider, validatorCompiler, serializerCompiler } from 'fastify-type-provider-zod'
 import { registerErrorHandler } from './middleware/error-handler'
@@ -23,6 +24,8 @@ fastify.register(cors, {
 fastify.register(jwt, {
   secret: process.env.JWT_ACCESS_SECRET!,
 })
+
+fastify.register(cookie)
 
 fastify.register(routes)
 

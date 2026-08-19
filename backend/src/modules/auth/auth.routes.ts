@@ -1,9 +1,10 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
+import { z } from 'zod'
 
 import { authenticate } from '../../middleware/authenticate'
 import { userResponseSchema } from '../user/user.schemas'
 import { authController } from './auth.controller'
-import { authResponseSchema, loginBodySchema } from './auth.schemas'
+import { authResponseSchema, loginBodySchema, refreshResponseSchema } from './auth.schemas'
 
 export const authRoutes: FastifyPluginAsyncZod = async (fastify) => {
   fastify.post(
@@ -30,5 +31,29 @@ export const authRoutes: FastifyPluginAsyncZod = async (fastify) => {
       },
     },
     authController.me,
+  )
+
+  fastify.post(
+    '/auth/refresh',
+    {
+      schema: {
+        response: {
+          200: refreshResponseSchema,
+        },
+      },
+    },
+    authController.refresh,
+  )
+
+  fastify.post(
+    '/auth/logout',
+    {
+      schema: {
+        response: {
+          204: z.null(),
+        },
+      },
+    },
+    authController.logout,
   )
 }
