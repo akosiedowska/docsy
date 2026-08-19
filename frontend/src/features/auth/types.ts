@@ -23,3 +23,7 @@ export type RegisterPayload = {
 }
 
 export type RegisterResponse = AuthUser
+
+export type LoginErrorResponse = {
+    message: string
+}

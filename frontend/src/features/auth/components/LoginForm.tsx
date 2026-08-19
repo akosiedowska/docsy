@@ -26,12 +26,14 @@ export function LoginForm() {
   } = useForm<LoginFormValues>({ resolver: zodResolver(loginSchema) });
 
   const onSubmit = (values: LoginFormValues) => {
-     setMessage(null);
+    setMessage(null)
     mutate(values, {
       onSuccess: () => {
-        console.log('FROM', from)
-        const redirectTo = from ? `${from.pathname}${from.search}` : "/dashboard"
-        navigate(redirectTo, { replace: true });
+        const redirectTo = from ? `${from.pathname}${from.search}` : '/dashboard'
+        navigate(redirectTo, { replace: true })
+      },
+      onError: (err) => {
+        console.log('ERROR', err)
       },
     })
   }
@@ -57,7 +59,11 @@ console.log('error', error)
         sx={{ display: "flex", flexDirection: "column", gap: 2 }}
       >
         {message && <Alert severity="info">{message}</Alert>}
-        {error && <Alert severity="error">Invalid email or password.</Alert>}
+        {error && (
+          <Alert severity="error">
+            {error.response?.data?.message ?? "Something went wrong. Please try again."}
+          </Alert>
+        )}
         <TextField
           label="Email"
           type="email"
