@@ -1,0 +1,7 @@
+const SECONDS_TO_MS = 1000
+
+export const REFRESH_TOKEN_COOKIE_NAME = 'refresh_token'
+
+export const REFRESH_TOKEN_TTL_SECONDS = 86400 // 24h
+
+export const REFRESH_TOKEN_TTL_MS = REFRESH_TOKEN_TTL_SECONDS * SECONDS_TO_MS
