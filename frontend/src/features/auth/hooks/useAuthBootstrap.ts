@@ -1,8 +1,8 @@
-import { useEffect } from "react";
+import { useEffect } from 'react'
 
-import { useAuthStore } from "../../../stores/authStore";
-import { refreshAccessToken } from "../../../api/client";
-import { meRequest } from "../api";
+import { useAuthStore } from '../../../stores/authStore'
+import { refreshAccessToken } from '../../../api/client'
+import { meRequest } from '../api'
 
 export function useAuthBootstrap() {
   useEffect(() => {

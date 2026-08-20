@@ -1,4 +1,5 @@
 import axios, {AxiosError, type InternalAxiosRequestConfig} from "axios";
+import axios, {AxiosError, type InternalAxiosRequestConfig} from "axios";
 
 import { useAuthStore } from "../stores/authStore";
 
@@ -53,9 +54,30 @@ apiClient.interceptors.response.use(
       originalRequest.headers.set("Authorization", `Bearer ${newAccessToken}`)
       return apiClient(originalRequest)
     } catch (refreshError) {
+  async (error: AxiosError) => {
+    const originalRequest = error.config as (InternalAxiosRequestConfig & { _retry?: boolean }) | undefined
+    const url = originalRequest?.url ?? ""
+
+    if (url.includes("/auth/refresh") || url.includes("/auth/login")) {
+      return Promise.reject(error)
+    }
+
+    if (error.response?.status !== 401 || !originalRequest || originalRequest._retry) {
+      return Promise.reject(error)
+    }
+
+    originalRequest._retry = true
+
+    try {
+      const newAccessToken = await refreshAccessToken()
+      originalRequest.headers.set("Authorization", `Bearer ${newAccessToken}`)
+      return apiClient(originalRequest)
+    } catch (refreshError) {
       useAuthStore.getState().clearSession()
       window.location.href = '/'
+      return Promise.reject(refreshError)
       return Promise.reject(refreshError)
     }
   },
 )
+

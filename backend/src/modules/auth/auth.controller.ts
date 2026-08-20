@@ -5,10 +5,18 @@ import { authService } from './auth.service'
 import { REFRESH_TOKEN_COOKIE_NAME } from './auth.constants'
 import { getRefreshCookieOptions, clearRefreshCookieOptions } from './auth.cookies'
 import { UnauthorizedError } from '../../errors/http-error'
+import { REFRESH_TOKEN_COOKIE_NAME } from './auth.constants'
+import { getRefreshCookieOptions, clearRefreshCookieOptions } from './auth.cookies'
+import { UnauthorizedError } from '../../errors/http-error'
 import type { LoginBody } from './auth.schemas'
 
 const login = async (request: FastifyRequest<{ Body: LoginBody }>, reply: FastifyReply) => {
   const user = await authService.validateCredentials(request.body.email, request.body.password)
+  const { token } = await authService.createSession(user.id, {
+    userAgent: request.headers['user-agent'],
+    ip: request.ip,
+  })
+  reply.setCookie(REFRESH_TOKEN_COOKIE_NAME, token, getRefreshCookieOptions())
   const { token } = await authService.createSession(user.id, {
     userAgent: request.headers['user-agent'],
     ip: request.ip,
@@ -55,6 +63,8 @@ const logout = async (request: FastifyRequest, reply: FastifyReply) => {
 export const authController = {
   login,
   me,
+  refresh,
+  logout,
   refresh,
   logout,
 }

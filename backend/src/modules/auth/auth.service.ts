@@ -1,5 +1,6 @@
 import * as bcrypt from 'bcrypt'
 import * as crypto from 'crypto'
+import * as crypto from 'crypto'
 
 import { prisma } from '../../db/prisma'
 import { UnauthorizedError } from '../../errors/http-error'
