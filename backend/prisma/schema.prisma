@@ -12,28 +12,23 @@ datasource db {
   provider = "postgresql"
 }
 
-model User { 
- id           String    @id @default(uuid()) 
- email        String    @unique 
+model User {
+ id           String    @id @default(uuid())
+ email        String    @unique
  firstName    String
  lastName     String
- passwordHash String 
- sessions     Session[] 
- createdAt    DateTime  @default(now()) 
+ passwordHash String
+ session      Session?
+ createdAt    DateTime  @default(now())
 }
 
-model Session { 
- id            String    @id @default(uuid()) 
- userId        String 
- user          User      @relation(fields: [userId], references: [id], onDelete: Cascade) 
- tokenHash     String    @unique          // sha256 of the current refresh token 
- prevTokenHash String?   @unique          // grace window for multi-tab races 
- rotatedAt     DateTime? 
- revokedAt     DateTime? 
- expiresAt     DateTime 
- userAgent     String? 
- ip            String? 
- createdAt     DateTime  @default(now()) 
- 
- @@index([userId])
+model Session {
+ id            String    @id @default(uuid())
+ userId        String    @unique
+ user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+ tokenHash     String    @unique
+ expiresAt     DateTime
+ userAgent     String?
+ ip            String?
+ createdAt     DateTime  @default(now())
 }

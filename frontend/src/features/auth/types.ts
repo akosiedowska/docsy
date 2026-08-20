@@ -1,12 +1,42 @@
 export type LoginPayload = {
-    email: string
-    password: string
+  email: string
+  password: string
+}
+
+export type AuthUser = {
+  id: string
+  email: string
+  firstName: string
+  lastName: string
+  createdAt: string
 }
 
 export type AuthResponse = {
-    id: string
-    email: string
-    firstName: string
-    lastName: string
-    role: string
+  accessToken: string
+  user: AuthUser
 }
+
+export type RegisterPayload = {
+  firstName: string
+  lastName: string
+  email: string
+  password: string
+}
+
+export type RegisterResponse = AuthUser
+
+export type RefreshResponse = {
+    accessToken: string
+}
+
+export type ValidationIssue = {
+  instancePath: string
+  message: string
+}
+
+export type ApiErrorResponse = {
+  message: string
+  issues?: ValidationIssue[]
+}
+
+export type LoginErrorResponse = ApiErrorResponse
