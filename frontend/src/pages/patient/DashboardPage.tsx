@@ -9,7 +9,7 @@ const DashboardPage = () => {
       <p>first name: {user?.firstName}</p>
       <p>last name: {user?.lastName}</p>
       <p>email: {user?.email}</p>
-      <p>account created: {user?.createdAt}</p>
+      <p>account created: {user && new Date(user.createdAt).toLocaleDateString()}</p>
     </div>
   )
 }
