@@ -1,6 +1,5 @@
 import * as bcrypt from 'bcrypt'
 import * as crypto from 'crypto'
-import * as crypto from 'crypto'
 
 import { prisma } from '../../db/prisma'
 import { UnauthorizedError } from '../../errors/http-error'
@@ -32,7 +31,6 @@ const createSession = async (userId: string, meta: SessionMeta) => {
   const token = generateRefreshToken()
   const expiresAt = new Date(Date.now() + REFRESH_TOKEN_TTL_MS)
 
-  // One session per user: logging in here invalidates any session elsewhere.
   await prisma.session.upsert({
     where: { userId },
     create: {
