@@ -13,7 +13,7 @@ import {
   Typography,
 } from '@mui/material'
 import { alpha, useTheme } from '@mui/material/styles'
-import { HousePlus, CircleUserRound, LogOut, CirclePlus } from 'lucide-react'
+import { HousePlus, CircleUserRound, LogOut, Plus } from 'lucide-react'
 import { Link as RouterLink } from 'react-router'
 
 import { logoFontFamily } from '../../styles/theme'
@@ -50,7 +50,7 @@ const Header = () => {
         </Link>
         {isAuthenticated ? (
           <Stack direction='row' sx={{ alignItems: 'center' }} spacing={4}>
-            <Button variant='contained' startIcon={<CirclePlus />} sx={{ color: 'white' }}>
+            <Button variant='contained' startIcon={<Plus />} sx={{ color: 'white' }}>
               Book
             </Button>
             <IconButton
