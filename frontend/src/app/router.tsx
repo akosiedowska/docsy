@@ -5,7 +5,7 @@ import RegisterPage from '../pages/auth/RegisterPage'
 import DashboardPage from '../pages/patient/DashboardPage'
 import ErrorPage from '../pages/ErrorPage'
 import AppLayout from '../layouts/AppLayout'
-import { RequireAuth } from '../features/auth/components/RequireAuth'
+import { AuthGuard } from '../features/auth/components/AuthGuard'
 
 const paths = {
   HOME: '/',
@@ -22,11 +22,16 @@ export const router = createBrowserRouter([
       {
         errorElement: <ErrorPage />,
         children: [
-          //   { path: paths.LOGIN, element: <LoginPage /> },
-          { index: true, element: <LoginPage /> },
-          { path: paths.REGISTER, element: <RegisterPage /> },
           {
-            element: <RequireAuth />,
+            element: <AuthGuard mode='guest' />,
+            children: [
+              //   { path: paths.LOGIN, element: <LoginPage /> },
+              { index: true, element: <LoginPage /> },
+              { path: paths.REGISTER, element: <RegisterPage /> },
+            ],
+          },
+          {
+            element: <AuthGuard mode='protected' />,
             children: [
               {
                 path: paths.DASHBOARD,
