@@ -2,7 +2,11 @@ import { Box, CircularProgress } from '@mui/material'
 import { Navigate, Outlet, useLocation } from 'react-router'
 import { useAuthStore } from '../../../stores/authStore'
 
-export function RequireAuth() {
+type AuthGuardProps = {
+  mode: 'guest' | 'protected'
+}
+
+export function AuthGuard({ mode }: AuthGuardProps) {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
   const isBootstrapping = useAuthStore((s) => s.isBootstrapping)
   const location = useLocation()
@@ -13,6 +17,11 @@ export function RequireAuth() {
         <CircularProgress />
       </Box>
     )
+  }
+
+  if (mode === 'guest') {
+    if (isAuthenticated) return <Navigate to='/dashboard' replace />
+    return <Outlet />
   }
 
   if (isAuthenticated) return <Outlet />

@@ -1,18 +1,6 @@
 import { useState } from 'react'
-import {
-  AppBar,
-  Avatar,
-  Box,
-  Divider,
-  IconButton,
-  Link,
-  Menu,
-  MenuItem,
-  Stack,
-  Toolbar,
-  Typography,
-} from '@mui/material'
-import { alpha } from '@mui/material/styles'
+import { AppBar, Box, Divider, IconButton, Link, Menu, MenuItem, Stack, Toolbar, Typography } from '@mui/material'
+import { alpha, useTheme } from '@mui/material/styles'
 import { HousePlus, CircleUserRound, LogOut } from 'lucide-react'
 import { Link as RouterLink } from 'react-router'
 
@@ -27,6 +15,7 @@ const Header = () => {
   const { isAuthenticated, user } = useAuthStore()
   const { mutate: logout } = useLogout()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const theme = useTheme()
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
@@ -39,7 +28,7 @@ const Header = () => {
     <AppBar position='sticky' sx={{ px: { xs: 2, sm: 4 } }} elevation={0}>
       <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-          <HousePlus width={36} height={36} strokeWidth={2.5} color='var(--mui-palette-primary-main)' />
+          <HousePlus width={36} height={36} strokeWidth={2.5} color={theme?.vars?.palette.primary.main} />
           <Typography sx={{ fontFamily: logoFontFamily, fontSize: '1.5rem' }} color='primary'>
             Docsy
           </Typography>
@@ -102,14 +91,14 @@ const Header = () => {
                   console.log('hi')
                 }}
               >
-                <CircleUserRound color='var(--mui-palette-text-primary)' />
+                <CircleUserRound color={theme?.vars?.palette.text.primary} />
                 Profile
               </MenuItem>
               <MenuItem
                 sx={{ gap: 2, '&:hover': { backgroundColor: alpha(brand.lime, 0.6) } }}
                 onClick={() => logout()}
               >
-                <LogOut color='var(--mui-palette-text-primary)' />
+                <LogOut color={theme?.vars?.palette.text.primary} />
                 Log out
               </MenuItem>
             </Menu>
