@@ -40,8 +40,7 @@ export function RegisterForm() {
       password: values.password,
     }
     signup(payload, {
-      onSuccess: (data) => {
-        console.log('DATA', data)
+      onSuccess: () => {
         login({ email: values.email, password: values.password })
         navigate('/dashboard')
       },
