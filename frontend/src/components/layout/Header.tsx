@@ -50,9 +50,11 @@ const Header = () => {
         </Link>
         {isAuthenticated ? (
           <Stack direction='row' sx={{ alignItems: 'center' }} spacing={4}>
-            <Button variant='contained' startIcon={<Plus />} sx={{ color: 'white' }}>
-              Book
-            </Button>
+            <Link component={RouterLink} to={paths.RESERVATION}>
+              <Button variant='contained' startIcon={<Plus />} sx={{ color: 'white' }}>
+                Book
+              </Button>
+            </Link>
             <IconButton
               size='large'
               aria-label='account of current user'
