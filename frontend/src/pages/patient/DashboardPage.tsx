@@ -1,16 +1,18 @@
-import { useAuthStore } from '../../stores/authStore'
+import { Stack, Typography } from '@mui/material'
+import { Appointment } from '../../features/appointments/components/patient/Appointment'
 
 const DashboardPage = () => {
-  const user = useAuthStore((state) => state.user)
   return (
-    <div>
-      <p>DashboardPage</p>
-      <p>USER</p>
-      <p>first name: {user?.firstName}</p>
-      <p>last name: {user?.lastName}</p>
-      <p>email: {user?.email}</p>
-      <p>account created: {user && new Date(user.createdAt).toLocaleDateString()}</p>
-    </div>
+    <Stack spacing={5} sx={{ alignItems: 'center' }}>
+      <Stack spacing={2}>
+        <Typography>Next appointments</Typography>
+        <Appointment />
+      </Stack>
+      <Stack spacing={2}>
+        <Typography>Previous appointments</Typography>
+        <Appointment />
+      </Stack>
+    </Stack>
   )
 }
 
