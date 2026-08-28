@@ -2,8 +2,11 @@ import { Box, Button, Stack, Typography } from '@mui/material'
 import { Plus } from 'lucide-react'
 
 import type { AvailableSlot } from '../../types'
+import { useBookSlot } from '../../hooks/useBookSlot'
 
 const SlotCard = ({ slot }: { slot: AvailableSlot }) => {
+  const { mutate: bookSlot } = useBookSlot()
+
   return (
     <Stack
       direction='row'
@@ -18,7 +21,12 @@ const SlotCard = ({ slot }: { slot: AvailableSlot }) => {
         </Typography>
       </Box>
       <Box>
-        <Button variant='contained' startIcon={<Plus />} sx={{ color: 'white' }}>
+        <Button
+          variant='contained'
+          startIcon={<Plus />}
+          sx={{ color: 'white' }}
+          onClick={() => bookSlot({ id: slot.id, booked: true })}
+        >
           Book
         </Button>
       </Box>

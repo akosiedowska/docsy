@@ -1,6 +1,12 @@
 import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { slotController } from './slot.controller'
-import { slotsQuerySchema, slotsResponseSchema } from './slot.schema'
+import {
+  slotIdParamsSchema,
+  slotResponseSchema,
+  slotsQuerySchema,
+  slotsResponseSchema,
+  updateSlotBodySchema,
+} from './slot.schema'
 
 export const slotRoutes: FastifyPluginAsyncZod = async (fastify) => {
   fastify.get(
@@ -12,5 +18,18 @@ export const slotRoutes: FastifyPluginAsyncZod = async (fastify) => {
       },
     },
     slotController.getAvailableSlots,
+  )
+  fastify.patch(
+    '/slots/:id',
+    {
+      schema: {
+        params: slotIdParamsSchema,
+        body: updateSlotBodySchema,
+        response: {
+          200: slotResponseSchema,
+        },
+      },
+    },
+    slotController.updateSlotById,
   )
 }

@@ -19,6 +19,7 @@ registerErrorHandler(fastify)
 fastify.register(cors, {
   origin: ['http://localhost:5173'],
   credentials: true,
+  methods: ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE'],
 })
 
 fastify.register(jwt, {
