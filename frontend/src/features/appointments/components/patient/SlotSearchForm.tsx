@@ -5,7 +5,7 @@ import { z } from 'zod'
 import { useState } from 'react'
 
 import { useSpecializations } from '../../hooks/useSpecializations'
-import { useAvailableSlots } from '../../hooks/useGetAvailableSlots'
+import { useAvailableSlots } from '../../hooks/useAvailableSlots'
 import SlotList from './SlotList'
 
 const specializationSchema = z.object({

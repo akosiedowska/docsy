@@ -28,7 +28,7 @@ const SlotList = ({ availableSlots, isFetching, isError, searchedSpecialization 
   return (
     <Stack sx={{ mt: 2, gap: 1 }}>
       {availableSlots?.map((slot) => (
-        <SlotCard slot={slot} />
+        <SlotCard slot={slot} key={slot.id} />
       ))}
     </Stack>
   )
