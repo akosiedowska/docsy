@@ -3,10 +3,12 @@ import { authRoutes } from '../modules/auth/auth.routes'
 import { userRoutes } from '../modules/user/user.routes'
 import { doctorRoutes } from '../modules/doctor/doctor.routes'
 import { slotRoutes } from '../modules/slot/slot.routes'
+import { appointmentRoutes } from '../modules/appointments/appointment.routes'
 
 export const routes: FastifyPluginAsyncZod = async (fastify) => {
   fastify.register(userRoutes)
   fastify.register(authRoutes)
   fastify.register(doctorRoutes)
   fastify.register(slotRoutes)
+  fastify.register(appointmentRoutes)
 }
