@@ -36,12 +36,12 @@ const SlotSearchForm = () => {
           <Controller
             name='specialization'
             control={control}
-            defaultValue={undefined}
+            defaultValue=''
             render={({ field }) => (
               <Autocomplete
                 options={specializations ?? []}
                 value={field.value ?? null}
-                onChange={(_, value) => field.onChange(value)}
+                onChange={(_, value) => field.onChange(value ?? '')}
                 onBlur={field.onBlur}
                 sx={{ minWidth: 500 }}
                 renderInput={(params) => (
