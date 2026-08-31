@@ -7,8 +7,11 @@ import {
   slotsResponseSchema,
   updateSlotBodySchema,
 } from './slot.schema'
+import { authenticate } from '../../middleware/authenticate'
 
 export const slotRoutes: FastifyPluginAsyncZod = async (fastify) => {
+  fastify.addHook('preHandler', authenticate)
+
   fastify.get(
     '/slots',
     {
