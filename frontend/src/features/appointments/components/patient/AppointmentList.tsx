@@ -20,7 +20,7 @@ const AppointmentList = () => {
       <Stack spacing={2}>
         <Typography>Next appointments</Typography>
         {appointments
-          .filter((a) => a.conducted === false)
+          .filter((a) => a.conducted === false && a.cancelled === false)
           .map((appointment: Appointment) => (
             <AppointmentCard appointment={appointment} key={appointment.id} />
           ))}

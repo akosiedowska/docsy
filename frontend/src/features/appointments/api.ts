@@ -21,6 +21,6 @@ export function getAppointments() {
   return apiClient.get<Appointment[]>('/appointments').then((r) => r.data)
 }
 
-export function cancelAppointment(id: StringConstructor) {
-  return apiClient.patch(`/appointments/${id}/cancel`).then((r) => r.data)
+export function cancelAppointment(id: string) {
+  return apiClient.patch<Appointment>(`/appointments/${id}/cancel`).then((r) => r.data)
 }
