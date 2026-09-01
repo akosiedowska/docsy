@@ -30,3 +30,7 @@ export type AppointmentResponse = z.infer<typeof appointmentResponseSchema>
 export const appointmentIdParamsSchema = z.object({ id: z.uuid() })
 
 export type AppointmentIdParams = z.infer<typeof appointmentIdParamsSchema>
+
+export const appointmentsResponseSchema = z.array(appointmentResponseSchema)
+
+export type AppointmentsResponse = z.infer<typeof appointmentsResponseSchema>

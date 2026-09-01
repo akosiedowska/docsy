@@ -4,6 +4,7 @@ import { authenticate } from '../../middleware/authenticate'
 import {
   appointmentIdParamsSchema,
   appointmentResponseSchema,
+  appointmentsResponseSchema,
   createAppointmentBodySchema,
 } from './appointment.schemas'
 import { appointmentController } from './appointment.controller'
@@ -31,5 +32,16 @@ export const appointmentRoutes: FastifyPluginAsyncZod = async (fastify) => {
       },
     },
     appointmentController.cancelAppointment,
+  )
+
+  fastify.get(
+    '/appointments',
+    {
+      preHandler: authenticate,
+      schema: {
+        response: { 200: appointmentsResponseSchema },
+      },
+    },
+    appointmentController.getAppointments,
   )
 }

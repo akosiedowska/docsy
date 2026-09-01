@@ -67,7 +67,31 @@ const cancelAppointment = async (id: string, userId: string) => {
   })
 }
 
+const getAppointmentsByUserId = async (userId: string) => {
+  const patient = await prisma.patient.findUnique({ where: { userId } })
+  if (!patient) throw new NotFoundError('Patient not found')
+
+  return prisma.appointment.findMany({
+    where: { patientId: patient.id },
+    orderBy: { slot: { date: 'asc' } },
+    select: {
+      id: true,
+      conducted: true,
+      cancelled: true,
+      slot: {
+        select: {
+          id: true,
+          date: true,
+          address: true,
+          doctor: { select: { id: true, specialization: true, user: { select: { firstName: true, lastName: true } } } },
+        },
+      },
+    },
+  })
+}
+
 export const appointmentService = {
   bookAppointment,
   cancelAppointment,
+  getAppointmentsByUserId,
 }

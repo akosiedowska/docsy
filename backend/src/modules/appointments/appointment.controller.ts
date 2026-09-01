@@ -15,7 +15,14 @@ const cancelAppointment = async (request: FastifyRequest<{ Params: AppointmentId
   reply.code(200).send(result)
 }
 
+const getAppointments = async (request: FastifyRequest, reply: FastifyReply) => {
+  const { sub: userId } = request.user as { sub: string }
+  const result = await appointmentService.getAppointmentsByUserId(userId)
+  reply.code(200).send(result)
+}
+
 export const appointmentController = {
   bookAppointment,
   cancelAppointment,
+  getAppointments,
 }
