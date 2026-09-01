@@ -11,26 +11,21 @@ interface SlotListProps {
 }
 
 const SlotList = ({ availableSlots, isFetching, isError, searchedSpecialization }: SlotListProps) => {
-  {
-    isFetching && <CircularProgress sx={{ mt: 2 }} />
-  }
-
-  {
-    isError && <Typography color='error'>Failed to load available slots.</Typography>
-  }
-
-  {
-    !isFetching && searchedSpecialization && availableSlots?.length === 0 && (
-      <Typography>No available slots found for {searchedSpecialization}.</Typography>
-    )
-  }
-
   return (
-    <Stack sx={{ mt: 2, gap: 1 }}>
-      {availableSlots?.map((slot) => (
-        <SlotCard slot={slot} key={slot.id} />
-      ))}
-    </Stack>
+    <>
+      {isFetching && <CircularProgress sx={{ mt: 2 }} />}
+
+      {isError && <Typography color='error'>Failed to load available slots.</Typography>}
+
+      {!isFetching && searchedSpecialization && availableSlots?.length === 0 && (
+        <Typography>No available slots found for {searchedSpecialization}.</Typography>
+      )}
+      <Stack sx={{ mt: 2, gap: 1 }}>
+        {availableSlots?.map((slot) => (
+          <SlotCard slot={slot} key={slot.id} />
+        ))}
+      </Stack>
+    </>
   )
 }
 

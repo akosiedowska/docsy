@@ -12,3 +12,26 @@ export type AvailableSlot = {
     }
   }
 }
+
+export type CreateAppointmentBody = {
+  slotId: string
+}
+
+export type Appointment = {
+  id: string
+  conducted: boolean
+  cancelled: boolean
+  slot: {
+    id: string
+    date: string
+    address: string
+    doctor: {
+      id: string
+      specialization: string
+      user: {
+        firstName: string
+        lastName: string
+      }
+    }
+  }
+}

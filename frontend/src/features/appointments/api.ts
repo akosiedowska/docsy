@@ -1,5 +1,5 @@
 import { apiClient } from '../../api/client'
-import type { AvailableSlot } from './types'
+import type { Appointment, AvailableSlot, CreateAppointmentBody } from './types'
 
 export function getSpecializations() {
   return apiClient.get<string[]>('/specializations').then((r) => r.data)
@@ -11,4 +11,16 @@ export function getAvailableSlots(specialization?: string) {
 
 export function bookSlot(id: string, payload: Pick<AvailableSlot, 'booked'>) {
   return apiClient.patch<AvailableSlot>(`/slots/${id}`, payload).then((r) => r.data)
+}
+
+export function bookAppointment(payload: CreateAppointmentBody) {
+  return apiClient.post<Appointment>('/appointments', payload).then((r) => r.data)
+}
+
+export function getAppointments() {
+  return apiClient.get<Appointment[]>('/appointments').then((r) => r.data)
+}
+
+export function cancelAppointment(id: StringConstructor) {
+  return apiClient.patch(`/appointments/${id}/cancel`).then((r) => r.data)
 }
