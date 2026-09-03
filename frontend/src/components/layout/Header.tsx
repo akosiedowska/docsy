@@ -1,7 +1,19 @@
 import { useState } from 'react'
-import { AppBar, Box, Divider, IconButton, Link, Menu, MenuItem, Stack, Toolbar, Typography } from '@mui/material'
+import {
+  AppBar,
+  Box,
+  Button,
+  Divider,
+  IconButton,
+  Link,
+  Menu,
+  MenuItem,
+  Stack,
+  Toolbar,
+  Typography,
+} from '@mui/material'
 import { alpha, useTheme } from '@mui/material/styles'
-import { HousePlus, CircleUserRound, LogOut } from 'lucide-react'
+import { HousePlus, CircleUserRound, LogOut, Plus } from 'lucide-react'
 import { Link as RouterLink } from 'react-router'
 
 import { logoFontFamily } from '../../styles/theme'
@@ -10,6 +22,7 @@ import { useAuthStore } from '../../stores/authStore'
 import { getInitials } from '../../utils/helpers'
 import { useLogout } from '../../features/auth/hooks/useLogout'
 import { UserAvatar } from '../ui/UserAvatar'
+import { paths } from '../../app/router'
 
 const Header = () => {
   const { isAuthenticated, user } = useAuthStore()
@@ -27,14 +40,21 @@ const Header = () => {
   return (
     <AppBar position='sticky' sx={{ px: { xs: 2, sm: 4 } }} elevation={0}>
       <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-          <HousePlus width={36} height={36} strokeWidth={2.5} color={theme?.vars?.palette.primary.main} />
-          <Typography sx={{ fontFamily: logoFontFamily, fontSize: '1.5rem' }} color='primary'>
-            Docsy
-          </Typography>
-        </Box>
+        <Link component={RouterLink} to={paths.HOME} underline='none'>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+            <HousePlus width={36} height={36} strokeWidth={2.5} color={theme?.vars?.palette.primary.main} />
+            <Typography sx={{ fontFamily: logoFontFamily, fontSize: '1.5rem' }} color='primary'>
+              Docsy
+            </Typography>
+          </Box>
+        </Link>
         {isAuthenticated ? (
-          <>
+          <Stack direction='row' sx={{ alignItems: 'center' }} spacing={4}>
+            <Link component={RouterLink} to={paths.RESERVATION}>
+              <Button variant='contained' startIcon={<Plus />} sx={{ color: 'white' }}>
+                Book
+              </Button>
+            </Link>
             <IconButton
               size='large'
               aria-label='account of current user'
@@ -86,10 +106,10 @@ const Header = () => {
               </MenuItem>
               <Divider />
               <MenuItem
+                component={RouterLink}
+                to={paths.PROFILE}
                 sx={{ gap: 2, '&:hover': { backgroundColor: alpha(brand.lime, 0.6) } }}
-                onClick={() => {
-                  console.log('hi')
-                }}
+                onClick={handleClose}
               >
                 <CircleUserRound color={theme?.vars?.palette.text.primary} />
                 Profile
@@ -102,13 +122,13 @@ const Header = () => {
                 Log out
               </MenuItem>
             </Menu>
-          </>
+          </Stack>
         ) : (
           <Stack direction='row' spacing={2}>
-            <Link component={RouterLink} to='/' color='inherit' underline='hover'>
+            <Link component={RouterLink} to={paths.HOME} color='inherit' underline='hover'>
               Log in
             </Link>
-            <Link component={RouterLink} to='/register' color='inherit' underline='hover'>
+            <Link component={RouterLink} to={paths.REGISTER} color='inherit' underline='hover'>
               Sign up
             </Link>
           </Stack>

@@ -12,13 +12,22 @@ datasource db {
   provider = "postgresql"
 }
 
+enum Role {
+  PATIENT
+  DOCTOR
+  ADMIN
+}
+
 model User {
  id           String    @id @default(uuid())
  email        String    @unique
  firstName    String
  lastName     String
  passwordHash String
+ role         Role      @default(PATIENT)
  session      Session?
+ doctor       Doctor?
+ patient      Patient?
  createdAt    DateTime  @default(now())
 }
 
@@ -31,4 +40,48 @@ model Session {
  userAgent     String?
  ip            String?
  createdAt     DateTime  @default(now())
+}
+
+model Doctor {
+ id             String   @id @default(uuid())
+ userId         String   @unique
+ user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+ specialization String
+ slots          Slot[]
+ createdAt      DateTime @default(now())
+}
+
+model Patient {
+ id           String        @id @default(uuid())
+ userId       String        @unique
+ user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+ appointments Appointment[]
+ createdAt    DateTime      @default(now())
+}
+
+model Slot {
+ id           String        @id @default(uuid())
+ doctorId     String
+ doctor       Doctor        @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+ date         DateTime
+ address      String
+ booked       Boolean       @default(false)
+ appointments Appointment[]
+ createdAt    DateTime      @default(now())
+
+ @@index([doctorId, date])
+}
+
+model Appointment {
+ id         String   @id @default(uuid())
+ slotId     String
+ slot       Slot     @relation(fields: [slotId], references: [id], onDelete: Cascade)
+ patientId  String
+ patient    Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+ conducted  Boolean  @default(false)
+ cancelled  Boolean  @default(false)
+ createdAt  DateTime @default(now())
+
+ @@index([patientId])
+ @@index([slotId])
 }

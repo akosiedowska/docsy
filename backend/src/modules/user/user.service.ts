@@ -23,6 +23,7 @@ const createUser = async (userData: CreateUserBody) => {
       lastName: userData.lastName,
       email: userData.email,
       passwordHash: hashedPassword,
+      patient: { create: {} },
     },
   })
 
@@ -61,9 +62,7 @@ const updateUserById = async (id: string, userData: UpdateUserBody) => {
     }
   }
 
-  const hashedPassword = userData.password
-    ? await bcrypt.hash(userData.password, 12)
-    : undefined
+  const hashedPassword = userData.password ? await bcrypt.hash(userData.password, 12) : undefined
 
   const result = await prisma.user.update({
     where: { id },

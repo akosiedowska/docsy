@@ -6,12 +6,16 @@ import DashboardPage from '../pages/patient/DashboardPage'
 import ErrorPage from '../pages/ErrorPage'
 import AppLayout from '../layouts/AppLayout'
 import { AuthGuard } from '../features/auth/components/AuthGuard'
+import ReservationPage from '../pages/patient/ReservationPage'
+import ProfilePage from '../pages/patient/ProfilePage'
 
-const paths = {
+export const paths = {
   HOME: '/',
   LOGIN: 'login',
   REGISTER: 'register',
   DASHBOARD: 'dashboard',
+  RESERVATION: 'reservation',
+  PROFILE: 'profile',
 }
 
 export const router = createBrowserRouter([
@@ -36,6 +40,14 @@ export const router = createBrowserRouter([
               {
                 path: paths.DASHBOARD,
                 element: <DashboardPage />,
+              },
+              {
+                path: paths.RESERVATION,
+                element: <ReservationPage />,
+              },
+              {
+                path: paths.PROFILE,
+                element: <ProfilePage />,
               },
             ],
           },
