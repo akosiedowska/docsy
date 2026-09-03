@@ -15,23 +15,32 @@ const AppointmentList = () => {
     return <Typography color='error'>{error.message}</Typography>
   }
 
+  const nextAppointments = appointments.filter(
+    (a) => a.conducted === false && a.cancelled === false,
+  )
+  const previousAppointments = appointments.filter((a) => a.conducted === true)
+
   return (
     <Stack spacing={5} sx={{ alignItems: 'center' }}>
-      <Stack spacing={2}>
+      <Stack spacing={2} sx={{ width: '400px' }}>
         <Typography>Next appointments</Typography>
-        {appointments
-          .filter((a) => a.conducted === false && a.cancelled === false)
-          .map((appointment: Appointment) => (
+        {nextAppointments.length > 0 ? (
+          nextAppointments.map((appointment: Appointment) => (
             <AppointmentCard appointment={appointment} key={appointment.id} />
-          ))}
+          ))
+        ) : (
+          <Typography>No appointments yet.</Typography>
+        )}
       </Stack>
-      <Stack spacing={2}>
+      <Stack spacing={2} sx={{ width: '400px' }}>
         <Typography>Previous appointments</Typography>
-        {appointments
-          .filter((a) => a.conducted === true)
-          .map((appointment: Appointment) => (
+        {previousAppointments.length > 0 ? (
+          previousAppointments.map((appointment: Appointment) => (
             <AppointmentCard appointment={appointment} key={appointment.id} />
-          ))}
+          ))
+        ) : (
+          <Typography>No appointments yet.</Typography>
+        )}
       </Stack>
     </Stack>
   )
