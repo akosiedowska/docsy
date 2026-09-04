@@ -1,5 +1,5 @@
 import { prisma } from '../../db/prisma'
-import { ConflictError, NotFoundError, UnauthorizedError } from '../../errors/http-error'
+import { ConflictError, NotFoundError } from '../../errors/http-error'
 
 const bookAppointment = async (slotId: string, userId: string) => {
   return prisma.$transaction(async (tx) => {
@@ -24,7 +24,11 @@ const bookAppointment = async (slotId: string, userId: string) => {
             date: true,
             address: true,
             doctor: {
-              select: { id: true, specialization: true, user: { select: { firstName: true, lastName: true } } },
+              select: {
+                id: true,
+                specialization: true,
+                user: { select: { firstName: true, lastName: true } },
+              },
             },
           },
         },
@@ -33,12 +37,14 @@ const bookAppointment = async (slotId: string, userId: string) => {
   })
 }
 
-const cancelAppointment = async (id: string, userId: string) => {
+const cancelAppointment = async (id: string) => {
   return prisma.$transaction(async (tx) => {
-    const appointment = await tx.appointment.findUnique({ where: { id }, include: { patient: true, slot: true } })
+    const appointment = await tx.appointment.findUnique({
+      where: { id },
+      include: { patient: true, slot: true },
+    })
 
     if (!appointment) throw new NotFoundError('Appointment not found')
-    if (appointment.patient.userId !== userId) throw new UnauthorizedError('Not authorized')
     if (appointment.cancelled) throw new ConflictError('Appointment already cancelled')
     if (appointment.conducted) throw new ConflictError('Appointment already conducted')
 
@@ -59,7 +65,11 @@ const cancelAppointment = async (id: string, userId: string) => {
             date: true,
             address: true,
             doctor: {
-              select: { id: true, specialization: true, user: { select: { firstName: true, lastName: true } } },
+              select: {
+                id: true,
+                specialization: true,
+                user: { select: { firstName: true, lastName: true } },
+              },
             },
           },
         },
@@ -84,7 +94,13 @@ const getAppointmentsByUserId = async (userId: string) => {
           id: true,
           date: true,
           address: true,
-          doctor: { select: { id: true, specialization: true, user: { select: { firstName: true, lastName: true } } } },
+          doctor: {
+            select: {
+              id: true,
+              specialization: true,
+              user: { select: { firstName: true, lastName: true } },
+            },
+          },
         },
       },
     },

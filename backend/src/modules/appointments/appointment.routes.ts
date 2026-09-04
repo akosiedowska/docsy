@@ -1,6 +1,7 @@
 import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 
 import { authenticate } from '../../middleware/authenticate'
+import { authorize } from '../../middleware/authorize'
 import {
   appointmentIdParamsSchema,
   appointmentResponseSchema,
@@ -8,6 +9,7 @@ import {
   createAppointmentBodySchema,
 } from './appointment.schemas'
 import { appointmentController } from './appointment.controller'
+import { cancelAppointmentPolicy } from './appointment.policy'
 
 export const appointmentRoutes: FastifyPluginAsyncZod = async (fastify) => {
   fastify.post(
@@ -25,7 +27,7 @@ export const appointmentRoutes: FastifyPluginAsyncZod = async (fastify) => {
   fastify.patch(
     '/appointments/:id/cancel',
     {
-      preHandler: authenticate,
+      preHandler: [authenticate, authorize(cancelAppointmentPolicy)],
       schema: {
         params: appointmentIdParamsSchema,
         response: { 200: appointmentResponseSchema },
