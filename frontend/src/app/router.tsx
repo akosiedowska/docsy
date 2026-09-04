@@ -8,6 +8,7 @@ import AppLayout from '../layouts/AppLayout'
 import { AuthGuard } from '../features/auth/components/AuthGuard'
 import ReservationPage from '../pages/patient/ReservationPage'
 import ProfilePage from '../pages/patient/ProfilePage'
+import NotFoundPage from '../pages/NotFoundPage'
 
 export const paths = {
   HOME: '/',
@@ -22,6 +23,7 @@ export const router = createBrowserRouter([
   {
     path: paths.HOME,
     element: <AppLayout />,
+    errorElement: <ErrorPage />,
     children: [
       {
         errorElement: <ErrorPage />,
@@ -51,6 +53,7 @@ export const router = createBrowserRouter([
               },
             ],
           },
+          { path: '*', element: <NotFoundPage /> },
         ],
       },
     ],
