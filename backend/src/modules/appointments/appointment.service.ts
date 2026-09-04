@@ -40,6 +40,7 @@ const cancelAppointment = async (id: string, userId: string) => {
     if (!appointment) throw new NotFoundError('Appointment not found')
     if (appointment.patient.userId !== userId) throw new UnauthorizedError('Not authorized')
     if (appointment.cancelled) throw new ConflictError('Appointment already cancelled')
+    if (appointment.conducted) throw new ConflictError('Appointment already conducted')
 
     await tx.slot.update({
       where: { id: appointment.slotId },
