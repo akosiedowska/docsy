@@ -9,6 +9,8 @@ import {
   userResponseSchema,
 } from './user.schemas'
 import { authenticate } from '../../middleware/authenticate'
+import { authorize } from '../../middleware/authorize'
+import { userSelfOrAdminPolicy } from './user.policy'
 
 export const userRoutes: FastifyPluginAsyncZod = async (fastify) => {
   fastify.post(
@@ -39,7 +41,7 @@ export const userRoutes: FastifyPluginAsyncZod = async (fastify) => {
   fastify.get(
     '/users/:id',
     {
-      preHandler: authenticate,
+      preHandler: [authenticate, authorize(userSelfOrAdminPolicy)],
       schema: {
         params: userIdParamsSchema,
         response: {
@@ -53,7 +55,7 @@ export const userRoutes: FastifyPluginAsyncZod = async (fastify) => {
   fastify.patch(
     '/users/:id',
     {
-      preHandler: authenticate,
+      preHandler: [authenticate, authorize(userSelfOrAdminPolicy)],
       schema: {
         params: userIdParamsSchema,
         body: updateUserBodySchema,
@@ -68,7 +70,7 @@ export const userRoutes: FastifyPluginAsyncZod = async (fastify) => {
   fastify.delete(
     '/users/:id',
     {
-      preHandler: authenticate,
+      preHandler: [authenticate, authorize(userSelfOrAdminPolicy)],
       schema: {
         params: userIdParamsSchema,
         response: {
