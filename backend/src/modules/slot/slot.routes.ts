@@ -8,6 +8,7 @@ import {
   updateSlotBodySchema,
 } from './slot.schema'
 import { authenticate } from '../../middleware/authenticate'
+import { requireRole } from '../../middleware/requireRole'
 
 export const slotRoutes: FastifyPluginAsyncZod = async (fastify) => {
   fastify.addHook('preHandler', authenticate)
@@ -25,6 +26,7 @@ export const slotRoutes: FastifyPluginAsyncZod = async (fastify) => {
   fastify.patch(
     '/slots/:id',
     {
+      preHandler: requireRole('ADMIN'),
       schema: {
         params: slotIdParamsSchema,
         body: updateSlotBodySchema,
