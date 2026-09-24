@@ -1,4 +1,5 @@
-import { Outlet } from 'react-router'
+// import { Outlet } from 'react-router'
+import { Outlet } from '@tanstack/react-router'
 import Header from '../components/layout/Header'
 import { Container } from '@mui/material'
 

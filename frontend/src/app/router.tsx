@@ -19,43 +19,43 @@ export const paths = {
   PROFILE: 'profile',
 }
 
-export const router = createBrowserRouter([
-  {
-    path: paths.HOME,
-    element: <AppLayout />,
-    errorElement: <ErrorPage />,
-    children: [
-      {
-        errorElement: <ErrorPage />,
-        children: [
-          {
-            element: <AuthGuard mode='guest' />,
-            children: [
-              //   { path: paths.LOGIN, element: <LoginPage /> },
-              { index: true, element: <LoginPage /> },
-              { path: paths.REGISTER, element: <RegisterPage /> },
-            ],
-          },
-          {
-            element: <AuthGuard mode='protected' />,
-            children: [
-              {
-                path: paths.DASHBOARD,
-                element: <DashboardPage />,
-              },
-              {
-                path: paths.RESERVATION,
-                element: <ReservationPage />,
-              },
-              {
-                path: paths.PROFILE,
-                element: <ProfilePage />,
-              },
-            ],
-          },
-          { path: '*', element: <NotFoundPage /> },
-        ],
-      },
-    ],
-  },
-])
+// export const router = createBrowserRouter([
+//   {
+//     path: paths.HOME,
+//     element: <AppLayout />,
+//     errorElement: <ErrorPage />,
+//     children: [
+//       {
+//         errorElement: <ErrorPage />,
+//         children: [
+//           {
+//             element: <AuthGuard mode='guest' />,
+//             children: [
+//               //   { path: paths.LOGIN, element: <LoginPage /> },
+//               { index: true, element: <LoginPage /> },
+//               { path: paths.REGISTER, element: <RegisterPage /> },
+//             ],
+//           },
+//           {
+//             element: <AuthGuard mode='protected' />,
+//             children: [
+//               {
+//                 path: paths.DASHBOARD,
+//                 element: <DashboardPage />,
+//               },
+//               {
+//                 path: paths.RESERVATION,
+//                 element: <ReservationPage />,
+//               },
+//               {
+//                 path: paths.PROFILE,
+//                 element: <ProfilePage />,
+//               },
+//             ],
+//           },
+//           { path: '*', element: <NotFoundPage /> },
+//         ],
+//       },
+//     ],
+//   },
+// ])

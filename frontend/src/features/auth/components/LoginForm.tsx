@@ -2,7 +2,13 @@ import { useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Alert, Box, Button, Link, Paper, TextField, Typography } from '@mui/material'
 import { useForm } from 'react-hook-form'
-import { Link as RouterLink, type Location, useLocation, useNavigate } from 'react-router'
+// import { type Location } from 'react-router'
+import {
+  Link as RouterLink,
+  useNavigate,
+  useLocation,
+  type ParsedLocation,
+} from '@tanstack/react-router'
 
 import { useLogin } from '../hooks/useLogin'
 import { loginSchema, type LoginFormValues } from '../schemas'
@@ -10,7 +16,7 @@ import { loginSchema, type LoginFormValues } from '../schemas'
 export function LoginForm() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { from } = (location.state as { from?: Location } | null) ?? {}
+  const { from } = (location.state as { from?: ParsedLocation } | null) ?? {}
   const [message, setMessage] = useState(() => {
     const msg = sessionStorage.getItem('authMessage')
     sessionStorage.removeItem('authMessage')
@@ -28,8 +34,10 @@ export function LoginForm() {
     setMessage(null)
     mutate(values, {
       onSuccess: () => {
-        const redirectTo = from ? `${from.pathname}${from.search}` : '/dashboard'
-        navigate(redirectTo, { replace: true })
+        // const redirectTo = from ? `${from.pathname}${from.search}` : '/dashboard'
+        const redirectTo = from ? from.href : '/dashboard'
+        // navigate(redirectTo, { replace: true })
+        navigate({ to: redirectTo, replace: true })
       },
     })
   }
@@ -47,7 +55,9 @@ export function LoginForm() {
       >
         {message && <Alert severity='info'>{message}</Alert>}
         {error && (
-          <Alert severity='error'>{error.response?.data?.message ?? 'Something went wrong. Please try again.'}</Alert>
+          <Alert severity='error'>
+            {error.response?.data?.message ?? 'Something went wrong. Please try again.'}
+          </Alert>
         )}
         <TextField
           label='Email'
