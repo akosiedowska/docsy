@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 
 type AuthUser = { id: string; email: string; firstName: string; lastName: string; createdAt: string }
 
@@ -13,13 +14,21 @@ type AuthState = {
   setBootstrapped: () => void
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  user: null,
-  accessToken: null,
-  isAuthenticated: false,
-  isBootstrapping: true,
-  setSession: (user, accessToken) => set({ user, accessToken, isAuthenticated: true }),
-  setAccessToken: (accessToken) => set({ accessToken }),
-  clearSession: () => set({ user: null, accessToken: null, isAuthenticated: false }),
-  setBootstrapped: () => set({ isBootstrapping: false }),
-}))
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      user: null,
+      accessToken: null,
+      isAuthenticated: false,
+      isBootstrapping: true,
+      setSession: (user, accessToken) => set({ user, accessToken, isAuthenticated: true }),
+      setAccessToken: (accessToken) => set({ accessToken }),
+      clearSession: () => set({ user: null, accessToken: null, isAuthenticated: false }),
+      setBootstrapped: () => set({ isBootstrapping: false }),
+    }),
+    {
+      name: 'docsy_auth',
+      partialize: (state) => ({ isAuthenticated: state.isAuthenticated }),
+    },
+  ),
+)
