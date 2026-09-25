@@ -6,7 +6,7 @@ import { bookAppointment } from '../api'
 import { appointmentsKeys } from '../queryKeys'
 import type { Appointment, CreateAppointmentBody } from '../types'
 
-export function useBookAppointment() {
+export const useBookAppointment = () => {
   const queryClient = useQueryClient()
 
   return useMutation<Appointment, AxiosError<ApiErrorResponse>, CreateAppointmentBody>({

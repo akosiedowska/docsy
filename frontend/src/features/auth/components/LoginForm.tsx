@@ -7,7 +7,7 @@ import { Route } from '../../../routes/index'
 import { useLogin } from '../hooks/useLogin'
 import { loginSchema, type LoginFormValues } from '../schemas'
 
-export function LoginForm() {
+export const LoginForm = () => {
   const navigate = useNavigate()
   const { redirect } = Route.useSearch()
   const { message } = useLocation().state

@@ -17,11 +17,11 @@ const signupFields: readonly (keyof SignupFormValues)[] = [
   'confirmPassword',
 ]
 
-function isSignupField(field: string): field is keyof SignupFormValues {
+const isSignupField = (field: string): field is keyof SignupFormValues => {
   return (signupFields as readonly string[]).includes(field)
 }
 
-export function RegisterForm() {
+export const RegisterForm = () => {
   const navigate = useNavigate()
   const { mutate: signup, isPending, error } = useRegister()
   const { mutate: login } = useLogin()

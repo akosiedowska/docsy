@@ -5,7 +5,7 @@ import type { Appointment } from '../types'
 import type { AxiosError } from 'axios'
 import type { ApiErrorResponse } from '../../../api/types'
 
-export function useCancelAppointment() {
+export const useCancelAppointment = () => {
   const queryClient = useQueryClient()
 
   return useMutation<Appointment, AxiosError<ApiErrorResponse>, string>({

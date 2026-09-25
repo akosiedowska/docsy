@@ -17,7 +17,7 @@ apiClient.interceptors.request.use((config) => {
 
 let refreshPromise: Promise<string> | null = null
 
-export function refreshAccessToken(): Promise<string> {
+export const refreshAccessToken = (): Promise<string> => {
   if (!refreshPromise) {
     refreshPromise = apiClient
       .post<{ accessToken: string }>('/auth/refresh')

@@ -4,11 +4,11 @@ import { useAuthStore } from '../../stores/authStore'
 import { refreshAccessToken } from '../../api/client'
 import { meRequest } from './api'
 
-function isUnauthorized(error: unknown) {
+const isUnauthorized = (error: unknown) => {
   return axios.isAxiosError(error) && error.response?.status === 401
 }
 
-async function bootstrapAuth() {
+const bootstrapAuth = async () => {
   if (!useAuthStore.getState().isAuthenticated) {
     useAuthStore.getState().setBootstrapped()
     return

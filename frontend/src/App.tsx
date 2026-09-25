@@ -6,7 +6,7 @@ import { router } from './app/router'
 import '@fontsource-variable/inter/wght.css'
 import './App.css'
 
-function App() {
+const App = () => {
   return (
     <AppProviders>
       <RouterProvider router={router} />

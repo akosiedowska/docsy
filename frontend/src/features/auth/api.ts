@@ -1,18 +1,18 @@
 import { apiClient } from '../../api/client'
 import type { AuthUser, LoginPayload, AuthResponse, RegisterPayload, RegisterResponse } from './types'
 
-export function loginRequest(payload: LoginPayload) {
+export const loginRequest = (payload: LoginPayload) => {
   return apiClient.post<AuthResponse>('/auth/login', payload).then((r) => r.data)
 }
 
-export function registerRequest(payload: RegisterPayload) {
+export const registerRequest = (payload: RegisterPayload) => {
   return apiClient.post<RegisterResponse>('/users', payload).then((r) => r.data)
 }
 
-export function logoutRequest() {
+export const logoutRequest = () => {
   return apiClient.post<void>('/auth/logout')
 }
 
-export function meRequest() {
+export const meRequest = () => {
   return apiClient.get<AuthUser>('/auth/me').then((r) => r.data)
 }
