@@ -14,7 +14,7 @@ import {
 } from '@mui/material'
 import { alpha, useTheme } from '@mui/material/styles'
 import { HousePlus, CircleUserRound, LogOut, Plus } from 'lucide-react'
-import { Link as RouterLink } from 'react-router'
+import { Link as RouterLink } from '@tanstack/react-router'
 
 import { logoFontFamily } from '../../styles/theme'
 import { brand } from '../../styles/colors'
@@ -22,7 +22,7 @@ import { useAuthStore } from '../../stores/authStore'
 import { getInitials } from '../../utils/helpers'
 import { useLogout } from '../../features/auth/hooks/useLogout'
 import { UserAvatar } from '../ui/UserAvatar'
-import { paths } from '../../app/router'
+import { paths } from '../../app/paths'
 
 const Header = () => {
   const { isAuthenticated, user } = useAuthStore()
@@ -40,9 +40,18 @@ const Header = () => {
   return (
     <AppBar position='sticky' sx={{ px: { xs: 2, sm: 4 } }} elevation={0}>
       <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>
-        <Link component={RouterLink} to={paths.HOME} underline='none'>
+        <Link
+          component={RouterLink}
+          to={isAuthenticated ? paths.DASHBOARD : paths.HOME}
+          underline='none'
+        >
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-            <HousePlus width={36} height={36} strokeWidth={2.5} color={theme?.vars?.palette.primary.main} />
+            <HousePlus
+              width={36}
+              height={36}
+              strokeWidth={2.5}
+              color={theme?.vars?.palette.primary.main}
+            />
             <Typography sx={{ fontFamily: logoFontFamily, fontSize: '1.5rem' }} color='primary'>
               Docsy
             </Typography>
@@ -91,7 +100,10 @@ const Header = () => {
               onClose={handleClose}
               elevation={1}
             >
-              <MenuItem disableRipple sx={{ gap: 2, cursor: 'default', '&:hover': { backgroundColor: 'transparent' } }}>
+              <MenuItem
+                disableRipple
+                sx={{ gap: 2, cursor: 'default', '&:hover': { backgroundColor: 'transparent' } }}
+              >
                 <UserAvatar sx={{ width: 24, height: 24, fontSize: '12px' }}>
                   {getInitials(user?.firstName, user?.lastName)}
                 </UserAvatar>

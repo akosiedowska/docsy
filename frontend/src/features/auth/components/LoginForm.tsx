@@ -1,21 +1,16 @@
-import { useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Alert, Box, Button, Link, Paper, TextField, Typography } from '@mui/material'
 import { useForm } from 'react-hook-form'
-import { Link as RouterLink, type Location, useLocation, useNavigate } from 'react-router'
+import { Link as RouterLink, useLocation, useNavigate } from '@tanstack/react-router'
 
+import { Route } from '../../../routes/index'
 import { useLogin } from '../hooks/useLogin'
 import { loginSchema, type LoginFormValues } from '../schemas'
 
 export function LoginForm() {
   const navigate = useNavigate()
-  const location = useLocation()
-  const { from } = (location.state as { from?: Location } | null) ?? {}
-  const [message, setMessage] = useState(() => {
-    const msg = sessionStorage.getItem('authMessage')
-    sessionStorage.removeItem('authMessage')
-    return msg
-  })
+  const { redirect } = Route.useSearch()
+  const { message } = useLocation().state
 
   const { mutate, isPending, error } = useLogin()
   const {
@@ -25,11 +20,9 @@ export function LoginForm() {
   } = useForm<LoginFormValues>({ resolver: zodResolver(loginSchema) })
 
   const onSubmit = (values: LoginFormValues) => {
-    setMessage(null)
     mutate(values, {
       onSuccess: () => {
-        const redirectTo = from ? `${from.pathname}${from.search}` : '/dashboard'
-        navigate(redirectTo, { replace: true })
+        navigate({ to: redirect ?? '/dashboard', replace: true })
       },
     })
   }
@@ -47,7 +40,9 @@ export function LoginForm() {
       >
         {message && <Alert severity='info'>{message}</Alert>}
         {error && (
-          <Alert severity='error'>{error.response?.data?.message ?? 'Something went wrong. Please try again.'}</Alert>
+          <Alert severity='error'>
+            {error.response?.data?.message ?? 'Something went wrong. Please try again.'}
+          </Alert>
         )}
         <TextField
           label='Email'
