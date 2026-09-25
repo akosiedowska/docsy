@@ -1,7 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Alert, Box, Button, Link, Paper, TextField, Typography } from '@mui/material'
 import { useForm } from 'react-hook-form'
-import { Link as RouterLink, useNavigate } from 'react-router'
+// import { Link as RouterLink, useNavigate } from 'react-router'
+import { Link as RouterLink, useNavigate } from '@tanstack/react-router'
 
 import { useRegister } from '../hooks/useRegister'
 import { signupSchema, type SignupFormValues } from '../schemas'
@@ -42,7 +43,8 @@ export function RegisterForm() {
     signup(payload, {
       onSuccess: () => {
         login({ email: values.email, password: values.password })
-        navigate('/dashboard')
+        // navigate('/dashboard')
+        navigate({ to: '/dashboard' })
       },
       onError: (err) => {
         const issues = err.response?.data?.issues ?? []

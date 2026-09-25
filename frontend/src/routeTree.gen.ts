@@ -10,43 +10,84 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as LoginIndexRouteImport } from './routes/login.index'
+import { Route as AuthRouteImport } from './routes/_auth'
+import { Route as RegisterRouteImport } from './routes/register'
+import { Route as AuthDashboardRouteImport } from './routes/_auth/dashboard'
+import { Route as AuthProfileRouteImport } from './routes/_auth/profile'
+import { Route as AuthReservationRouteImport } from './routes/_auth/reservation'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LoginIndexRoute = LoginIndexRouteImport.update({
-  id: '/login/',
-  path: '/login/',
+const AuthRoute = AuthRouteImport.update({
+  id: '/_auth',
   getParentRoute: () => rootRouteImport,
+} as any)
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthDashboardRoute = AuthDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthProfileRoute = AuthProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthReservationRoute = AuthReservationRouteImport.update({
+  id: '/reservation',
+  path: '/reservation',
+  getParentRoute: () => AuthRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/login/': typeof LoginIndexRoute
+  '/register': typeof RegisterRoute
+  '/dashboard': typeof AuthDashboardRoute
+  '/profile': typeof AuthProfileRoute
+  '/reservation': typeof AuthReservationRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/login': typeof LoginIndexRoute
+  '/register': typeof RegisterRoute
+  '/dashboard': typeof AuthDashboardRoute
+  '/profile': typeof AuthProfileRoute
+  '/reservation': typeof AuthReservationRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/login/': typeof LoginIndexRoute
+  '/_auth': typeof AuthRouteWithChildren
+  '/register': typeof RegisterRoute
+  '/_auth/dashboard': typeof AuthDashboardRoute
+  '/_auth/profile': typeof AuthProfileRoute
+  '/_auth/reservation': typeof AuthReservationRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login/'
+  fullPaths: '/' | '/register' | '/dashboard' | '/profile' | '/reservation'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login'
-  id: '__root__' | '/' | '/login/'
+  to: '/' | '/register' | '/dashboard' | '/profile' | '/reservation'
+  id:
+    | '__root__'
+    | '/'
+    | '/_auth'
+    | '/register'
+    | '/_auth/dashboard'
+    | '/_auth/profile'
+    | '/_auth/reservation'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  LoginIndexRoute: typeof LoginIndexRoute
+  AuthRoute: typeof AuthRouteWithChildren
+  RegisterRoute: typeof RegisterRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -58,19 +99,62 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/login/': {
-      id: '/login/'
-      path: '/login'
-      fullPath: '/login/'
-      preLoaderRoute: typeof LoginIndexRouteImport
+    '/_auth': {
+      id: '/_auth'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_auth/dashboard': {
+      id: '/_auth/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthDashboardRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/profile': {
+      id: '/_auth/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthProfileRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/reservation': {
+      id: '/_auth/reservation'
+      path: '/reservation'
+      fullPath: '/reservation'
+      preLoaderRoute: typeof AuthReservationRouteImport
+      parentRoute: typeof AuthRoute
     }
   }
 }
 
+interface AuthRouteChildren {
+  AuthDashboardRoute: typeof AuthDashboardRoute
+  AuthProfileRoute: typeof AuthProfileRoute
+  AuthReservationRoute: typeof AuthReservationRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthDashboardRoute: AuthDashboardRoute,
+  AuthProfileRoute: AuthProfileRoute,
+  AuthReservationRoute: AuthReservationRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  LoginIndexRoute: LoginIndexRoute,
+  AuthRoute: AuthRouteWithChildren,
+  RegisterRoute: RegisterRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

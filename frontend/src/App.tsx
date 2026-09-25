@@ -1,9 +1,8 @@
-// import { RouterProvider } from 'react-router'
 import { createRouter, RouterProvider } from '@tanstack/react-router'
 import { routeTree } from './routeTree.gen'
 
 import { AppProviders } from './app/providers'
-// import { router } from './app/router'
+import { useAuthStore } from './stores/authStore'
 
 import '@fontsource-variable/inter/wght.css'
 import './App.css'
@@ -12,6 +11,12 @@ const router = createRouter({
   routeTree,
   defaultPreload: 'intent',
   scrollRestoration: true,
+})
+
+useAuthStore.subscribe((state, prevState) => {
+  if (state.isAuthenticated !== prevState.isAuthenticated) {
+    router.invalidate()
+  }
 })
 
 declare module '@tanstack/react-router' {
