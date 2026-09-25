@@ -4,7 +4,7 @@ import { CssBaseline, ThemeProvider } from '@mui/material'
 import { queryClient } from '../api/queryClient'
 import { theme } from '../styles/theme'
 
-export function AppProviders({ children }: { children: React.ReactNode }) {
+export const AppProviders = ({ children }: { children: React.ReactNode }) => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />

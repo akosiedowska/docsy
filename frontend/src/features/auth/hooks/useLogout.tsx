@@ -4,7 +4,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useAuthStore } from "../../../stores/authStore";
 import { logoutRequest } from "../api";
 
-export function useLogout() {
+export const useLogout = () => {
   const clearSession = useAuthStore((s) => s.clearSession)
   const navigate = useNavigate()
 

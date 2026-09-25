@@ -7,7 +7,7 @@ import { loginRequest } from '../api'
 import type { AuthResponse, LoginPayload } from '../types'
 import { queryClient } from '../../../api/queryClient'
 
-export function useLogin() {
+export const useLogin = () => {
   const setSession = useAuthStore((s) => s.setSession)
   return useMutation<AuthResponse, AxiosError<ApiErrorResponse>, LoginPayload>({
     mutationFn: loginRequest,

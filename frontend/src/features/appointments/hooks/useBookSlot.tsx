@@ -11,7 +11,7 @@ type BookSlotVariables = {
   booked: boolean
 }
 
-export function useBookSlot() {
+export const useBookSlot = () => {
   const queryClient = useQueryClient()
 
   return useMutation<AvailableSlot, AxiosError<ApiErrorResponse>, BookSlotVariables>({

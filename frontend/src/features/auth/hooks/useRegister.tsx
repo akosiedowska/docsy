@@ -5,7 +5,7 @@ import type { ApiErrorResponse } from "../../../api/types";
 import { registerRequest } from "../api";
 import type { RegisterPayload, RegisterResponse } from "../types";
 
-export function useRegister() {
+export const useRegister = () => {
   return useMutation<RegisterResponse, AxiosError<ApiErrorResponse>, RegisterPayload>({
     mutationFn: registerRequest,
   });
