@@ -1,4 +1,5 @@
-import { Outlet, createFileRoute, redirect, type HistoryState } from '@tanstack/react-router'
+import { Outlet, createFileRoute, redirect } from '@tanstack/react-router'
+
 import { useAuthStore } from '../stores/authStore'
 import { authBootstrapPromise } from '../features/auth/bootstrap'
 import { LoadingSpinner } from '../components/ui/LoadingSpinner'
@@ -11,8 +12,12 @@ export const Route = createFileRoute('/_auth')({
 
     if (useAuthStore.getState().isAuthenticated) return
 
-    sessionStorage.setItem('authMessage', 'You must log in first.')
-    throw redirect({ to: '/', replace: true, state: { from: location } as HistoryState })
+    throw redirect({
+      to: '/',
+      replace: true,
+      search: { redirect: location.href },
+      state: { message: 'You must log in first.' },
+    })
   },
   component: () => <Outlet />,
 })

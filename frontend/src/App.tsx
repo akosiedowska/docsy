@@ -25,6 +25,12 @@ declare module '@tanstack/react-router' {
   }
 }
 
+declare module '@tanstack/history' {
+  interface HistoryState {
+    message?: string
+  }
+}
+
 function App() {
   return (
     <AppProviders>

@@ -1,13 +1,18 @@
 import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
 
 import { useAuthStore } from "../../../stores/authStore";
 import { logoutRequest } from "../api";
 
 export function useLogout() {
   const clearSession = useAuthStore((s) => s.clearSession)
+  const navigate = useNavigate()
 
   return useMutation({
     mutationFn: logoutRequest,
-    onSettled: () => clearSession(),
+    onSettled: async () => {
+      await navigate({ to: '/', replace: true })
+      clearSession()
+    },
   });
 }

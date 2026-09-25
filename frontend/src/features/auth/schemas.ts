@@ -21,3 +21,9 @@ export const signupSchema = z
   })
 
 export type SignupFormValues = z.infer<typeof signupSchema>;
+
+export const loginSearchSchema = z.object({
+  redirect: z.string().optional(),
+})
+
+export type LoginSearch = z.infer<typeof loginSearchSchema>;

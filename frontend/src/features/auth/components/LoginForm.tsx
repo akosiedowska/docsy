@@ -1,27 +1,16 @@
-import { useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Alert, Box, Button, Link, Paper, TextField, Typography } from '@mui/material'
 import { useForm } from 'react-hook-form'
-// import { type Location } from 'react-router'
-import {
-  Link as RouterLink,
-  useNavigate,
-  useLocation,
-  type ParsedLocation,
-} from '@tanstack/react-router'
+import { Link as RouterLink, useLocation, useNavigate } from '@tanstack/react-router'
 
+import { Route } from '../../../routes/index'
 import { useLogin } from '../hooks/useLogin'
 import { loginSchema, type LoginFormValues } from '../schemas'
 
 export function LoginForm() {
   const navigate = useNavigate()
-  const location = useLocation()
-  const { from } = (location.state as { from?: ParsedLocation } | null) ?? {}
-  const [message, setMessage] = useState(() => {
-    const msg = sessionStorage.getItem('authMessage')
-    sessionStorage.removeItem('authMessage')
-    return msg
-  })
+  const { redirect } = Route.useSearch()
+  const { message } = useLocation().state
 
   const { mutate, isPending, error } = useLogin()
   const {
@@ -31,13 +20,9 @@ export function LoginForm() {
   } = useForm<LoginFormValues>({ resolver: zodResolver(loginSchema) })
 
   const onSubmit = (values: LoginFormValues) => {
-    setMessage(null)
     mutate(values, {
       onSuccess: () => {
-        // const redirectTo = from ? `${from.pathname}${from.search}` : '/dashboard'
-        const redirectTo = from ? from.href : '/dashboard'
-        // navigate(redirectTo, { replace: true })
-        navigate({ to: redirectTo, replace: true })
+        navigate({ to: redirect ?? '/dashboard', replace: true })
       },
     })
   }
