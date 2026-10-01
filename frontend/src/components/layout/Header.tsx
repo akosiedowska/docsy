@@ -128,7 +128,10 @@ const Header = () => {
               </MenuItem>
               <MenuItem
                 sx={{ gap: 2, '&:hover': { backgroundColor: alpha(brand.lime, 0.6) } }}
-                onClick={() => logout()}
+                onClick={() => {
+                  handleClose()
+                  logout()
+                }}
               >
                 <LogOut color={theme?.vars?.palette.text.primary} />
                 Log out
