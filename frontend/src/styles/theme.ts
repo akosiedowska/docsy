@@ -3,6 +3,9 @@ import { createTheme, Button } from '@mantine/core'
 import '@fontsource-variable/inter/wght.css'
 import '@fontsource/pacifico'
 import '@fontsource/poppins'
+import '@fontsource/poppins/400.css'
+import '@fontsource/poppins/600.css'
+import '@fontsource/poppins/700.css'
 
 import { palette } from './colors'
 

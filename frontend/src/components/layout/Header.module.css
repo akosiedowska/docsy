@@ -11,11 +11,17 @@
   background-color: var(--mantine-color-lime-5);
 }
 
+.navLink {
+  text-decoration: none;
+  color: var(--mantine-color-black);
+}
+
 .navLink:hover {
   color: var(--mantine-color-violet-6);
+  transition: color ease-in 300ms;
 }
 
 .navLink[data-status='active'] {
   color: var(--mantine-color-black);
-  border-bottom-color: var(--mantine-color-lime-5);
+  border-bottom: 2px solid var(--mantine-color-lime-5);
 }

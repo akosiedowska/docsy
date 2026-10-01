@@ -34,7 +34,9 @@ const Header = () => {
             <Link to={paths.DASHBOARD} className={classes.navLink}>
               Dashboard
             </Link>
-            <Link to={paths.PROFILE}>Profile</Link>
+            <Link to={paths.PROFILE} className={classes.navLink}>
+              Profile
+            </Link>
           </Group>
         )}
         {isAuthenticated ? (
