@@ -1,0 +1,21 @@
+.avatar,
+.placeholder {
+  cursor: pointer;
+  background-color: var(--mantine-color-lime-3);
+  color: var(--mantine-color-black);
+  transition: background-color 200ms ease;
+}
+
+.avatar:hover,
+.avatar:hover .placeholder {
+  background-color: var(--mantine-color-lime-5);
+}
+
+.navLink:hover {
+  color: var(--mantine-color-violet-6);
+}
+
+.navLink[data-status='active'] {
+  color: var(--mantine-color-black);
+  border-bottom-color: var(--mantine-color-lime-5);
+}

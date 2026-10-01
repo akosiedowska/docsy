@@ -1,155 +1,99 @@
-import { useState } from 'react'
-import {
-  AppBar,
-  Box,
-  Button,
-  Divider,
-  IconButton,
-  Link,
-  Menu,
-  MenuItem,
-  Stack,
-  Toolbar,
-  Typography,
-} from '@mui/material'
-import { alpha, useTheme } from '@mui/material/styles'
-import { HousePlus, CircleUserRound, LogOut, Plus } from 'lucide-react'
-import { Link as RouterLink } from '@tanstack/react-router'
+import { AppShell, Anchor, Avatar, Button, Menu, Text, Box, Flex, Group } from '@mantine/core'
+import { HousePlus, CircleUserRound, LogOut, Plus, ClipboardList } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
 
-import { logoFontFamily } from '../../styles/theme'
-import { brand } from '../../styles/colors'
 import { useAuthStore } from '../../stores/authStore'
-import { getInitials } from '../../utils/helpers'
 import { useLogout } from '../../features/auth/hooks/useLogout'
-import { UserAvatar } from '../ui/UserAvatar'
+import { getInitials } from '../../utils/helpers'
 import { paths } from '../../app/paths'
+import { logoFontFamily } from '../../styles/theme'
+import { palette } from '../../styles/colors'
+import classes from './Header.module.css'
 
 const Header = () => {
   const { isAuthenticated, user } = useAuthStore()
   const { mutate: logout } = useLogout()
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-  const theme = useTheme()
 
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget)
-  }
-
-  const handleClose = () => {
-    setAnchorEl(null)
-  }
   return (
-    <AppBar position='sticky' sx={{ px: { xs: 2, sm: 4 } }} elevation={0}>
-      <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>
-        <Link
-          component={RouterLink}
+    <AppShell.Header bg='white'>
+      <Group h='100%' px={{ base: 'md', sm: 'xl' }} justify='space-between' wrap='nowrap'>
+        <Anchor
+          component={Link}
           to={isAuthenticated ? paths.DASHBOARD : paths.HOME}
-          underline='none'
+          underline='never'
         >
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-            <HousePlus
-              width={36}
-              height={36}
-              strokeWidth={2.5}
-              color={theme?.vars?.palette.primary.main}
-            />
-            <Typography sx={{ fontFamily: logoFontFamily, fontSize: '1.5rem' }} color='primary'>
+          <Flex gap='6' align='center'>
+            <HousePlus width={36} height={36} strokeWidth={2.5} color={palette.violet} />
+            <Text size='1.5rem' c='violet' fw={700} ff={logoFontFamily}>
               Docsy
-            </Typography>
-          </Box>
-        </Link>
-        {isAuthenticated ? (
-          <Stack direction='row' sx={{ alignItems: 'center' }} spacing={4}>
-            <Link component={RouterLink} to={paths.RESERVATION}>
-              <Button variant='contained' startIcon={<Plus />} sx={{ color: 'white' }}>
-                Book
-              </Button>
+            </Text>
+          </Flex>
+        </Anchor>
+        {isAuthenticated && (
+          <Group visibleFrom='sm' gap='xl'>
+            <Link to={paths.DASHBOARD} className={classes.navLink}>
+              Dashboard
             </Link>
-            <IconButton
-              size='large'
-              aria-label='account of current user'
-              aria-controls='menu-appbar'
-              aria-haspopup='true'
-              onClick={handleMenu}
-              color='secondary'
-              sx={{ '&:hover': { backgroundColor: alpha(brand.lime, 0.6) } }}
-            >
-              <UserAvatar
-                sx={{
-                  bgcolor: 'background.paper',
-                  color: 'primary.main',
-                  border: '2px solid',
-                  borderColor: 'primary.main',
-                }}
-              >
-                {getInitials(user?.firstName, user?.lastName)}
-              </UserAvatar>
-            </IconButton>
-            <Menu
-              id='menu-appbar'
-              anchorEl={anchorEl}
-              // anchorOrigin={{
-              //   vertical: 'bottom',
-              //   horizontal: 'right',
-              // }}
-              // keepMounted
-              // transformOrigin={{
-              //   vertical: 'bottom',
-              //   horizontal: 'right',
-              // }}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-              elevation={1}
-            >
-              <MenuItem
-                disableRipple
-                sx={{ gap: 2, cursor: 'default', '&:hover': { backgroundColor: 'transparent' } }}
-              >
-                <UserAvatar sx={{ width: 24, height: 24, fontSize: '12px' }}>
-                  {getInitials(user?.firstName, user?.lastName)}
-                </UserAvatar>
-                <Stack sx={{ minWidth: 0 }} spacing={0}>
-                  <Typography variant='subtitle1' noWrap sx={{ fontWeight: 700, lineHeight: 1.25 }}>
-                    {user?.firstName}&nbsp;{user?.lastName}
-                  </Typography>
-                  <Typography variant='caption' noWrap sx={{ display: 'block' }}>
-                    {user?.email}
-                  </Typography>
-                </Stack>
-              </MenuItem>
-              <Divider />
-              <MenuItem
-                component={RouterLink}
-                to={paths.PROFILE}
-                sx={{ gap: 2, '&:hover': { backgroundColor: alpha(brand.lime, 0.6) } }}
-                onClick={handleClose}
-              >
-                <CircleUserRound color={theme?.vars?.palette.text.primary} />
-                Profile
-              </MenuItem>
-              <MenuItem
-                sx={{ gap: 2, '&:hover': { backgroundColor: alpha(brand.lime, 0.6) } }}
-                onClick={() => {
-                  handleClose()
-                  logout()
-                }}
-              >
-                <LogOut color={theme?.vars?.palette.text.primary} />
-                Log out
-              </MenuItem>
-            </Menu>
-          </Stack>
-        ) : (
-          <Stack direction='row' spacing={2}>
-            <Link component={RouterLink} to={paths.HOME} color='inherit' underline='hover'>
-              Log in
-            </Link>
-            <Link component={RouterLink} to={paths.REGISTER} color='inherit' underline='hover'>
-              Sign up
-            </Link>
-          </Stack>
+            <Link to={paths.PROFILE}>Profile</Link>
+          </Group>
         )}
-      </Toolbar>
-    </AppBar>
+        {isAuthenticated ? (
+          <Group align='center' gap='xl'>
+            <Anchor component={Link} to={paths.RESERVATION}>
+              <Button leftSection={<Plus />}>Book</Button>
+            </Anchor>
+            <Menu shadow='md' width={220} position='bottom-end'>
+              <Menu.Target>
+                <Avatar
+                  className={classes.avatar}
+                  classNames={{ placeholder: classes.placeholder }}
+                >
+                  {getInitials(user?.firstName, user?.lastName)}
+                </Avatar>
+              </Menu.Target>
+
+              <Menu.Dropdown>
+                <Box px='16' py='8'>
+                  <Text size='sm' fw={700} truncate>
+                    {user?.firstName}&nbsp;{user?.lastName}
+                  </Text>
+                  <Text size='xs' c='dimmed' truncate>
+                    {user?.email}
+                  </Text>
+                </Box>
+                <Menu.Divider />
+                <Menu.Item
+                  component={Link}
+                  to={paths.DASHBOARD}
+                  leftSection={<ClipboardList size={18} color={palette.ink} />}
+                >
+                  Dashboard
+                </Menu.Item>
+                <Menu.Item
+                  component={Link}
+                  to={paths.PROFILE}
+                  leftSection={<CircleUserRound size={18} color={palette.ink} />}
+                >
+                  Profile
+                </Menu.Item>
+                <Menu.Item color='red' leftSection={<LogOut size={18} />} onClick={() => logout()}>
+                  Log out
+                </Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
+          </Group>
+        ) : (
+          <Group gap='md'>
+            <Anchor component={Link} to={paths.HOME} c='inherit' underline='hover'>
+              Log in
+            </Anchor>
+            <Anchor component={Link} to={paths.REGISTER} c='inherit' underline='hover'>
+              Sign up
+            </Anchor>
+          </Group>
+        )}
+      </Group>
+    </AppShell.Header>
   )
 }
 
