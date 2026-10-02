@@ -13,7 +13,7 @@ const AppLayout = () => {
   const isBootstrapping = useAuthStore((s) => s.isBootstrapping)
 
   return (
-    <AppShell header={{ height: { base: 70, sm: 86 } }}>
+    <AppShell header={{ height: { base: 70, sm: 86 } }} footer={{ height: { base: 70, sm: 0 } }}>
       <Header />
       <AppShell.Main bg={palette.background}>
         <Container className={classes.container}>
