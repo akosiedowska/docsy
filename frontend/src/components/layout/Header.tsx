@@ -42,7 +42,7 @@ const Header = () => {
         )}
         {isAuthenticated ? (
           <Group align='center' gap='xl'>
-            <Anchor component={Link} to={paths.RESERVATION}>
+            <Anchor component={Link} to={paths.RESERVATION} visibleFrom='sm'>
               <Button leftSection={<Plus />}>Book</Button>
             </Anchor>
             <Menu shadow='md' width={220} position='bottom-end'>
