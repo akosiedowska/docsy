@@ -18,7 +18,7 @@ const DashboardGreeting = () => {
           Here's what's next for your care.
         </Text>
       </Stack>
-      <Anchor component={Link} to={paths.RESERVATION}>
+      <Anchor component={Link} to={paths.RESERVATION} ml='auto'>
         <Button>Book appointment</Button>
       </Anchor>
     </Group>

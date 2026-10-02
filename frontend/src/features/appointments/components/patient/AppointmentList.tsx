@@ -1,4 +1,4 @@
-import { CircularProgress, Stack, Typography } from '@mui/material'
+import { Loader, Stack, Text } from '@mantine/core'
 
 import { AppointmentCard } from './AppointmentCard'
 import { useAppointments } from '../../hooks/useAppointments'
@@ -8,11 +8,11 @@ const AppointmentList = () => {
   const { isPending, isError, data: appointments, error } = useAppointments()
 
   if (isPending) {
-    return <CircularProgress sx={{ mt: 2 }} />
+    return <Loader />
   }
 
   if (isError) {
-    return <Typography color='error'>{error.message}</Typography>
+    return <Text color='error'>{error.message}</Text>
   }
 
   const nextAppointments = appointments.filter(
@@ -21,25 +21,29 @@ const AppointmentList = () => {
   const previousAppointments = appointments.filter((a) => a.conducted === true)
 
   return (
-    <Stack spacing={5} sx={{ alignItems: 'center' }}>
-      <Stack spacing={2} sx={{ width: '400px' }}>
-        <Typography>Next appointments</Typography>
+    <Stack gap='40px' align='center' w='100%' maw={500} mx='auto'>
+      <Stack gap='16px' w='100%'>
+        <Text fw='700' size='lg'>
+          Upcoming visits
+        </Text>
         {nextAppointments.length > 0 ? (
           nextAppointments.map((appointment: Appointment) => (
-            <AppointmentCard appointment={appointment} key={appointment.id} />
+            <AppointmentCard appointment={appointment} key={appointment.id} variant='upcoming' />
           ))
         ) : (
-          <Typography>No appointments yet.</Typography>
+          <Text>No appointments yet.</Text>
         )}
       </Stack>
-      <Stack spacing={2} sx={{ width: '400px' }}>
-        <Typography>Previous appointments</Typography>
+      <Stack gap='16px' w='100%'>
+        <Text fw='700' size='lg'>
+          Recent visits
+        </Text>
         {previousAppointments.length > 0 ? (
           previousAppointments.map((appointment: Appointment) => (
-            <AppointmentCard appointment={appointment} key={appointment.id} />
+            <AppointmentCard appointment={appointment} key={appointment.id} variant='recent' />
           ))
         ) : (
-          <Typography>No appointments yet.</Typography>
+          <Text>No appointments yet.</Text>
         )}
       </Stack>
     </Stack>
