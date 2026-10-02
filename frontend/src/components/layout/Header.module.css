@@ -14,14 +14,15 @@
 .navLink {
   text-decoration: none;
   color: var(--mantine-color-black);
+  transition: color ease-in 200ms;
 }
 
 .navLink:hover {
   color: var(--mantine-color-violet-6);
-  transition: color ease-in 300ms;
 }
 
 .navLink[data-status='active'] {
   color: var(--mantine-color-black);
+  font-weight: 600;
   border-bottom: 2px solid var(--mantine-color-lime-5);
 }

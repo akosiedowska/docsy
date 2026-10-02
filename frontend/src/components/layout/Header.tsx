@@ -8,6 +8,7 @@ import { getInitials } from '../../utils/helpers'
 import { paths } from '../../app/paths'
 import { logoFontFamily } from '../../styles/theme'
 import { palette } from '../../styles/colors'
+
 import classes from './Header.module.css'
 
 const Header = () => {

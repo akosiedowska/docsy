@@ -1,9 +1,11 @@
-import { Box, CircularProgress } from '@mui/material'
+import { Box, Loader } from '@mantine/core'
 
 export const LoadingSpinner = () => {
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
-      <CircularProgress />
+    <Box mt='8'>
+      <Loader />
     </Box>
   )
 }
+
+// sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}
