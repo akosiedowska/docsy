@@ -25,7 +25,7 @@ const Header = () => {
         >
           <Flex gap='6' align='center'>
             <HousePlus width={36} height={36} strokeWidth={2.5} color={palette.violet} />
-            <Text size='1.5rem' c='violet' fw={700} ff={logoFontFamily}>
+            <Text size='1.875rem' c='violet' fw={600} ff={logoFontFamily}>
               Docsy
             </Text>
           </Flex>
