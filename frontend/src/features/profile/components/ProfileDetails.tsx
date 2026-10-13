@@ -7,7 +7,7 @@ const ProfileDetails = () => {
 
   return (
     <>
-      <Paper p='xl'>
+      <Paper p='xl' withBorder>
         <DataList orientation='horizontal' withDivider gap='16'>
           <DataList.Item>
             <DataList.ItemLabel>First name(s)</DataList.ItemLabel>

@@ -28,11 +28,11 @@ const SlotCard = ({ slot }: { slot: AvailableSlot }) => {
         <Card.Section inheritPadding px='18' flex={1}>
           <Group justify='space-between'>
             <Box>
-              <Group>
+              <Group gap='2'>
                 <Text fw='600'>
                   Dr. {slot.doctor.user.firstName} {slot.doctor.user.lastName}
                 </Text>
-                -<Text>{slot.doctor.specialization}</Text>
+                {/* -<Text>{slot.doctor.specialization}</Text> */}
               </Group>
               <Text variant='body2' color='text.secondary'>
                 {new Date(slot.date).toLocaleString('en-US', {
@@ -44,7 +44,7 @@ const SlotCard = ({ slot }: { slot: AvailableSlot }) => {
               </Text>
             </Box>
             <Box>
-              <Button leftSection={<Plus />} onClick={() => setOpenDialog(true)}>
+              <Button leftSection={<Plus />} onClick={() => setOpenDialog(true)} variant='light'>
                 Book
               </Button>
             </Box>
