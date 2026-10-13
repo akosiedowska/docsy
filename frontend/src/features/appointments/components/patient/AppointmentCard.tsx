@@ -62,9 +62,7 @@ export const AppointmentCard = ({ appointment, variant }: AppointmentCardProps) 
 
           {appointment.conducted !== true && (
             <Group justify='end'>
-              <Button onClick={() => setOpenDialog(true)} variant='default'>
-                Cancel
-              </Button>
+              <Button onClick={() => setOpenDialog(true)}>Cancel</Button>
               {/* to be implemented */}
               {/* <Button>Reschedule</Button> */}
             </Group>

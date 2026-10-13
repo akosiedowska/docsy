@@ -15,7 +15,7 @@ const AppLayout = () => {
   return (
     <AppShell header={{ height: { base: 70, sm: 86 } }} footer={{ height: { base: 70, sm: 0 } }}>
       <Header />
-      <AppShell.Main bg={palette.background}>
+      <AppShell.Main bg={palette.background} className={classes.main}>
         <Container className={classes.container}>
           {isBootstrapping ? <LoadingSpinner /> : <Outlet />}
         </Container>
