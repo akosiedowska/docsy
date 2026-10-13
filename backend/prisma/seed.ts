@@ -13,6 +13,18 @@ async function main() {
     }
   });
 
+  await prisma.user.upsert({
+    where: { email: "admin@example.com" },
+    update: {},
+    create: {
+      email: "admin@example.com",
+      firstName: "Admin",
+      lastName: "Docsy",
+      passwordHash: await bcrypt.hash("admin123", 12),
+      role: "ADMIN",
+    },
+  });
+
   const doctorsData = [
     { email: "dr.smith@example.com", firstName: "Alice", lastName: "Smith", specialization: "Cardiology" },
     { email: "dr.jones@example.com", firstName: "Bob", lastName: "Jones", specialization: "Dermatology" },
