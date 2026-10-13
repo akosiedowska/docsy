@@ -11,6 +11,7 @@ import BottomNav from '../components/layout/BottomNav'
 
 const AppLayout = () => {
   const isBootstrapping = useAuthStore((s) => s.isBootstrapping)
+  const { isAuthenticated } = useAuthStore()
 
   return (
     <AppShell header={{ height: { base: 70, sm: 86 } }} footer={{ height: { base: 70, sm: 0 } }}>
@@ -20,9 +21,11 @@ const AppLayout = () => {
           {isBootstrapping ? <LoadingSpinner /> : <Outlet />}
         </Container>
       </AppShell.Main>
-      <AppShell.Footer hiddenFrom='sm'>
-        <BottomNav />
-      </AppShell.Footer>
+      {isAuthenticated ? (
+        <AppShell.Footer hiddenFrom='sm'>
+          <BottomNav />
+        </AppShell.Footer>
+      ) : null}
     </AppShell>
   )
 }

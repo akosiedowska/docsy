@@ -1,8 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Alert, Box, Button, Link, Paper, TextField, Typography } from '@mui/material'
 import { useForm } from 'react-hook-form'
-// import { Link as RouterLink, useNavigate } from 'react-router'
-import { Link as RouterLink, useNavigate } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
+import { Anchor, Alert, Button, Center, Paper, Stack, Text, TextInput, Title } from '@mantine/core'
+import { CircleAlert } from 'lucide-react'
 
 import { useRegister } from '../hooks/useRegister'
 import { signupSchema, type SignupFormValues } from '../schemas'
@@ -61,69 +61,60 @@ export const RegisterForm = () => {
   const hasFieldIssues = (error?.response?.data?.issues?.length ?? 0) > 0
 
   return (
-    <Paper elevation={2} sx={{ p: 4, maxWidth: 400, mx: 'auto', mt: 8 }}>
-      <Typography variant='h5' component='h1' gutterBottom>
-        Sign up
-      </Typography>
-      <Box
-        component='form'
-        onSubmit={handleSubmit(onSubmit)}
-        noValidate
-        sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
-      >
-        {error && !hasFieldIssues && (
-          <Alert severity='error'>
-            {error.response?.data?.message ?? 'Could not create account. Please try again.'}
-          </Alert>
-        )}
-        <TextField
-          label='First name'
-          autoComplete='given-name'
-          error={!!errors.firstName}
-          helperText={errors.firstName?.message}
-          {...register('firstName')}
-        />
-        <TextField
-          label='Last name'
-          autoComplete='family-name'
-          error={!!errors.lastName}
-          helperText={errors.lastName?.message}
-          {...register('lastName')}
-        />
-        <TextField
-          label='Email'
-          type='email'
-          autoComplete='email'
-          error={!!errors.email}
-          helperText={errors.email?.message}
-          {...register('email')}
-        />
-        <TextField
-          label='Password'
-          type='password'
-          autoComplete='new-password'
-          error={!!errors.password}
-          helperText={errors.password?.message}
-          {...register('password')}
-        />
-        <TextField
-          label='Confirm password'
-          type='password'
-          autoComplete='new-password'
-          error={!!errors.confirmPassword}
-          helperText={errors.confirmPassword?.message}
-          {...register('confirmPassword')}
-        />
-        <Button type='submit' variant='contained' disabled={isPending}>
-          {isPending ? 'Creating account...' : 'Sign up'}
-        </Button>
-        <Typography variant='body2'>
-          Already have an account?{' '}
-          <Link component={RouterLink} to='/'>
-            Log in
-          </Link>
-        </Typography>
-      </Box>
-    </Paper>
+    <Center>
+      <Paper p='xl' w={400} withBorder>
+        <Title order={1} size={24} ta='center' fw='600' mb='12'>
+          Sign up
+        </Title>
+        <Stack component='form' onSubmit={handleSubmit(onSubmit)}>
+          {error && !hasFieldIssues && (
+            <Alert variant='light' color='red' icon={<CircleAlert />}>
+              {error.response?.data?.message ?? 'Could not create account. Please try again.'}
+            </Alert>
+          )}
+          <TextInput
+            placeholder='First name'
+            size='md'
+            error={errors.firstName?.message}
+            {...register('firstName')}
+          />
+          <TextInput
+            placeholder='Last name'
+            size='md'
+            error={errors.lastName?.message}
+            {...register('lastName')}
+          />
+          <TextInput
+            placeholder='Email'
+            size='md'
+            error={errors.email?.message}
+            {...register('email')}
+          />
+          <TextInput
+            placeholder='Password'
+            size='md'
+            error={errors.password?.message}
+            {...register('password')}
+            type='password'
+          />
+          <TextInput
+            placeholder='Confirm password'
+            size='md'
+            error={errors.confirmPassword?.message}
+            {...register('confirmPassword')}
+            type='password'
+          />
+          <Button type='submit' disabled={isPending} color='lime.4' c='lime.9'>
+            {isPending ? 'Creating account...' : 'Sign up'}
+          </Button>
+          <Text ta='center'>
+            Already have an account?{' '}
+            <Anchor component={Link} to='/'>
+              Log in
+            </Anchor>
+          </Text>
+        </Stack>
+      </Paper>
+    </Center>
   )
 }

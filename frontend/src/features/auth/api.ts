@@ -8,7 +8,7 @@ import type {
 } from './types'
 
 export const loginRequest = (payload: LoginPayload) => {
-  return apiClient.post<AuthResponse>('/auth/loggin', payload).then((r) => r.data)
+  return apiClient.post<AuthResponse>('/auth/login', payload).then((r) => r.data)
 }
 
 export const registerRequest = (payload: RegisterPayload) => {
