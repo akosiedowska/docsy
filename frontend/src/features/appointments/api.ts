@@ -6,7 +6,9 @@ export const getSpecializations = () => {
 }
 
 export const getAvailableSlots = (specialization?: string) => {
-  return apiClient.get<AvailableSlot[]>('/slots', { params: { specialization } }).then((r) => r.data)
+  return apiClient
+    .get<AvailableSlot[]>('/slots', { params: { specialization } })
+    .then((r) => r.data)
 }
 
 export const bookSlot = (id: string, payload: Pick<AvailableSlot, 'booked'>) => {

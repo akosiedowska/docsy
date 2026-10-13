@@ -1,11 +1,9 @@
-import { Box, Loader } from '@mantine/core'
+import { Center, Loader } from '@mantine/core'
 
 export const LoadingSpinner = () => {
   return (
-    <Box mt='8'>
+    <Center mt='xl'>
       <Loader />
-    </Box>
+    </Center>
   )
 }
-
-// sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}

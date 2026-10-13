@@ -1,8 +1,9 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Autocomplete, Box, Button, Stack, TextField } from '@mui/material'
+import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { useState } from 'react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Box, Button, Group, Select } from '@mantine/core'
+import { useMediaQuery } from '@mantine/hooks'
 
 import { useSpecializations } from '../../hooks/useSpecializations'
 import { useAvailableSlots } from '../../hooks/useAvailableSlots'
@@ -20,10 +21,17 @@ const SlotSearchForm = () => {
   const {
     control,
     handleSubmit,
+    clearErrors,
     formState: { errors },
-  } = useForm<ReservationFormValues>({ resolver: zodResolver(specializationSchema) })
+  } = useForm<ReservationFormValues>({
+    resolver: zodResolver(specializationSchema),
+    defaultValues: { specialization: '' },
+    reValidateMode: 'onSubmit',
+  })
 
   const { data: availableSlots, isFetching, isError } = useAvailableSlots(searchedSpecialization)
+
+  const isMobile = useMediaQuery('(max-width: 692px)')
 
   const onSubmit = (values: ReservationFormValues) => {
     setSearchedSpecialization(values.specialization)
@@ -31,34 +39,37 @@ const SlotSearchForm = () => {
 
   return (
     <>
-      <Box component='form' onSubmit={handleSubmit(onSubmit)} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-        <Stack direction='row' sx={{ width: '100%', justifyContent: 'center', alignItems: 'center', gap: 5 }}>
+      <Box component='form' onSubmit={handleSubmit(onSubmit)}>
+        <Group align='end' justify='center' gap={isMobile ? 'sm' : 'xl'}>
           <Controller
             name='specialization'
             control={control}
-            defaultValue=''
             render={({ field }) => (
-              <Autocomplete
-                options={specializations ?? []}
-                value={field.value ?? null}
-                onChange={(_, value) => field.onChange(value ?? '')}
+              <Select
+                label='Specialization'
+                placeholder='Select specialization'
+                data={specializations ?? []}
+                value={field.value || null}
+                onChange={(value) => {
+                  field.onChange(value ?? '')
+                  clearErrors('specialization')
+                  if (value !== searchedSpecialization) setSearchedSpecialization(undefined)
+                }}
                 onBlur={field.onBlur}
-                sx={{ minWidth: 500 }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label='Specialization'
-                    error={!!errors.specialization}
-                    helperText={errors.specialization?.message}
-                  />
-                )}
+                error={errors.specialization?.message}
+                nothingFoundMessage='No specializations found'
+                w={isMobile ? '100%' : 500}
+                autoSelectOnBlur
+                allowDeselect={false}
+                searchable
+                clearable
               />
             )}
           />
-          <Button type='submit' variant='contained'>
+          <Button type='submit' loading={isFetching} fullWidth={isMobile ? true : false}>
             Search
           </Button>
-        </Stack>
+        </Group>
       </Box>
 
       <SlotList

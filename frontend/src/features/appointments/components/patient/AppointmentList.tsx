@@ -1,14 +1,15 @@
-import { Loader, Stack, Text } from '@mantine/core'
+import { Stack, Text } from '@mantine/core'
 
 import { AppointmentCard } from './AppointmentCard'
 import { useAppointments } from '../../hooks/useAppointments'
 import type { Appointment } from '../../types'
+import { LoadingSpinner } from '../../../../components/ui/LoadingSpinner'
 
 const AppointmentList = () => {
   const { isPending, isError, data: appointments, error } = useAppointments()
 
   if (isPending) {
-    return <Loader />
+    return <LoadingSpinner />
   }
 
   if (isError) {
