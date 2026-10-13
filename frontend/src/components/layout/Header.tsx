@@ -87,12 +87,12 @@ const Header = () => {
           </Group>
         ) : (
           <Group gap='md'>
-            <Anchor component={Link} to={paths.HOME} c='inherit' underline='hover'>
+            <Link to={paths.HOME} className={classes.navLink}>
               Log in
-            </Anchor>
-            <Anchor component={Link} to={paths.REGISTER} c='inherit' underline='hover'>
+            </Link>
+            <Link to={paths.REGISTER} className={classes.navLink}>
               Sign up
-            </Anchor>
+            </Link>
           </Group>
         )}
       </Group>

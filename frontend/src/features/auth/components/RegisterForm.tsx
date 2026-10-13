@@ -61,8 +61,8 @@ export const RegisterForm = () => {
   const hasFieldIssues = (error?.response?.data?.issues?.length ?? 0) > 0
 
   return (
-    <Center>
-      <Paper p='xl' w={400} withBorder>
+    <Center flex={1}>
+      <Paper p='xl' w='100%' maw={400} withBorder>
         <Title order={1} size={24} ta='center' fw='600' mb='12'>
           Sign up
         </Title>
