@@ -1,5 +1,11 @@
 import { apiClient } from '../../api/client'
-import type { AuthUser, LoginPayload, AuthResponse, RegisterPayload, RegisterResponse } from './types'
+import type {
+  AuthUser,
+  LoginPayload,
+  AuthResponse,
+  RegisterPayload,
+  RegisterResponse,
+} from './types'
 
 export const loginRequest = (payload: LoginPayload) => {
   return apiClient.post<AuthResponse>('/auth/login', payload).then((r) => r.data)

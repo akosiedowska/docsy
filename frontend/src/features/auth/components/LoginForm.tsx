@@ -1,7 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Alert, Box, Button, Link, Paper, TextField, Typography } from '@mui/material'
+import { Alert, Anchor, Button, Center, Paper, Stack, Text, TextInput, Title } from '@mantine/core'
 import { useForm } from 'react-hook-form'
-import { Link as RouterLink, useLocation, useNavigate } from '@tanstack/react-router'
+import { Link, useLocation, useNavigate } from '@tanstack/react-router'
+import { Info, CircleAlert } from 'lucide-react'
 
 import { Route } from '../../../routes/index'
 import { useLogin } from '../hooks/useLogin'
@@ -28,48 +29,46 @@ export const LoginForm = () => {
   }
 
   return (
-    <Paper elevation={2} sx={{ p: 4, maxWidth: 400, mx: 'auto', mt: 8 }}>
-      <Typography variant='h5' component='h1' gutterBottom>
-        Log in
-      </Typography>
-      <Box
-        component='form'
-        onSubmit={handleSubmit(onSubmit)}
-        noValidate
-        sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
-      >
-        {message && <Alert severity='info'>{message}</Alert>}
-        {error && (
-          <Alert severity='error'>
-            {error.response?.data?.message ?? 'Something went wrong. Please try again.'}
-          </Alert>
-        )}
-        <TextField
-          label='Email'
-          type='email'
-          autoComplete='email'
-          error={!!errors.email}
-          helperText={errors.email?.message}
-          {...register('email')}
-        />
-        <TextField
-          label='Password'
-          type='password'
-          autoComplete='current-password'
-          error={!!errors.password}
-          helperText={errors.password?.message}
-          {...register('password')}
-        />
-        <Button type='submit' variant='contained' disabled={isPending}>
-          {isPending ? 'Logging in...' : 'Log in'}
-        </Button>
-        <Typography variant='body2'>
-          Don&apos;t have an account?{' '}
-          <Link component={RouterLink} to='/register'>
-            Sign up
-          </Link>
-        </Typography>
-      </Box>
-    </Paper>
+    <Center flex={1}>
+      <Paper p='xl' w={400} withBorder>
+        <Title order={1} size={24} ta='center' fw='600' mb='12'>
+          Log in
+        </Title>
+        <Stack component='form' onSubmit={handleSubmit(onSubmit)}>
+          {message && (
+            <Alert variant='light' color='cyan' icon={<Info />}>
+              {message}
+            </Alert>
+          )}
+          {error && (
+            <Alert variant='light' color='red' icon={<CircleAlert />}>
+              {error.response?.data?.message ?? 'Something went wrong. Please try again.'}
+            </Alert>
+          )}
+          <TextInput
+            placeholder='Email'
+            size='md'
+            error={errors.email?.message}
+            {...register('email')}
+          />
+          <TextInput
+            placeholder='Password'
+            size='md'
+            error={errors.password?.message}
+            {...register('password')}
+            type='password'
+          />
+          <Button type='submit' disabled={isPending} color='lime.4' c='lime.9'>
+            {isPending ? 'Logging in...' : 'Log in'}
+          </Button>
+          <Text ta='center'>
+            Don&apos;t have an account?{' '}
+            <Anchor component={Link} to='/register'>
+              Sign up
+            </Anchor>
+          </Text>
+        </Stack>
+      </Paper>
+    </Center>
   )
 }

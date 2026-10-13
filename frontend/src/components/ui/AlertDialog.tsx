@@ -1,4 +1,5 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText } from '@mui/material'
+// import { Button, Dialog, DialogActions, DialogContent, DialogContentText } from '@mui/material'
+import { Box, Button, Group, Modal, Stack, Text } from '@mantine/core'
 import { type ReactNode } from 'react'
 
 interface AlertDialogProps {
@@ -21,18 +22,20 @@ const AlertDialog = ({
   icon,
 }: AlertDialogProps) => {
   return (
-    <Dialog open={open} onClose={handleClose} role='alertdialog'>
-      <DialogContent sx={{ display: 'flex', gap: 1 }}>
-        {icon}
-        <DialogContentText>{content}</DialogContentText>
-      </DialogContent>
-      <DialogActions sx={{ justifyContent: 'center' }}>
-        <Button onClick={handleClose}>{closeBtnText ? closeBtnText : 'Cancel'}</Button>
-        <Button onClick={action} autoFocus>
-          {confirmBtnText}
-        </Button>
-      </DialogActions>
-    </Dialog>
+    <Modal opened={open} onClose={handleClose} centered>
+      <Stack gap='md' align='center'>
+        <Group gap='xs' wrap='nowrap' align='center'>
+          <Box w={30} style={{ flexShrink: 0 }}>{icon}</Box>
+          <Text textWrap='wrap'>{content}</Text>
+        </Group>
+        <Group justify='center' gap='xl'>
+          <Button onClick={handleClose}>{closeBtnText ? closeBtnText : 'Cancel'}</Button>
+          <Button onClick={action} variant='outline'>
+            {confirmBtnText}
+          </Button>
+        </Group>
+      </Stack>
+    </Modal>
   )
 }
 
