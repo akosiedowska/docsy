@@ -1,0 +1,11 @@
+.section {
+  transition: margin 400ms ease;
+}
+
+.link[data-collapsed] .section {
+  margin-inline-end: 0;
+}
+
+.label {
+  white-space: nowrap;
+}

@@ -13,7 +13,6 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as AuthPatientRouteImport } from './routes/_auth/_patient'
-import { Route as AuthDashboardRouteImport } from './routes/_auth/dashboard'
 import { Route as AuthProfileRouteImport } from './routes/_auth/profile'
 import { Route as AuthPatientReservationRouteImport } from './routes/_auth/_patient/reservation'
 import { Route as AuthDashboardIndexRouteImport } from './routes/_auth/dashboard/index'
@@ -40,11 +39,6 @@ const AuthPatientRoute = AuthPatientRouteImport.update({
   id: '/_patient',
   getParentRoute: () => AuthRoute,
 } as any)
-const AuthDashboardRoute = AuthDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => AuthRoute,
-} as any)
 const AuthProfileRoute = AuthProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -56,17 +50,19 @@ const AuthPatientReservationRoute = AuthPatientReservationRouteImport.update({
   getParentRoute: () => AuthPatientRoute,
 } as any)
 const AuthDashboardIndexRoute = AuthDashboardIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AuthDashboardRoute,
+  id: '/dashboard/',
+  path: '/dashboard/',
+  getParentRoute: () => AuthRoute,
 } as any)
 const AuthDashboardAdminRoute = AuthDashboardAdminRouteImport.update({
-  id: '/_admin',
-  getParentRoute: () => AuthDashboardRoute,
+  id: '/dashboard/_admin',
+  path: '/dashboard',
+  getParentRoute: () => AuthRoute,
 } as any)
 const AuthDashboardDoctorRoute = AuthDashboardDoctorRouteImport.update({
-  id: '/_doctor',
-  getParentRoute: () => AuthDashboardRoute,
+  id: '/dashboard/_doctor',
+  path: '/dashboard',
+  getParentRoute: () => AuthRoute,
 } as any)
 const AuthDashboardAdminDoctorsRoute =
   AuthDashboardAdminDoctorsRouteImport.update({
@@ -84,9 +80,9 @@ const AuthDashboardDoctorScheduleRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/register': typeof RegisterRoute
-  '/dashboard': typeof AuthDashboardRouteWithChildren
   '/profile': typeof AuthProfileRoute
   '/reservation': typeof AuthPatientReservationRoute
+  '/dashboard': typeof AuthDashboardDoctorRouteWithChildren
   '/dashboard/': typeof AuthDashboardIndexRoute
   '/dashboard/doctors': typeof AuthDashboardAdminDoctorsRoute
   '/dashboard/schedule': typeof AuthDashboardDoctorScheduleRoute
@@ -106,7 +102,6 @@ export interface FileRoutesById {
   '/_auth': typeof AuthRouteWithChildren
   '/register': typeof RegisterRoute
   '/_auth/_patient': typeof AuthPatientRouteWithChildren
-  '/_auth/dashboard': typeof AuthDashboardRouteWithChildren
   '/_auth/profile': typeof AuthProfileRoute
   '/_auth/_patient/reservation': typeof AuthPatientReservationRoute
   '/_auth/dashboard/_admin': typeof AuthDashboardAdminRouteWithChildren
@@ -120,9 +115,9 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/register'
-    | '/dashboard'
     | '/profile'
     | '/reservation'
+    | '/dashboard'
     | '/dashboard/'
     | '/dashboard/doctors'
     | '/dashboard/schedule'
@@ -141,7 +136,6 @@ export interface FileRouteTypes {
     | '/_auth'
     | '/register'
     | '/_auth/_patient'
-    | '/_auth/dashboard'
     | '/_auth/profile'
     | '/_auth/_patient/reservation'
     | '/_auth/dashboard/_admin'
@@ -187,13 +181,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthPatientRouteImport
       parentRoute: typeof AuthRoute
     }
-    '/_auth/dashboard': {
-      id: '/_auth/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthDashboardRouteImport
-      parentRoute: typeof AuthRoute
-    }
     '/_auth/profile': {
       id: '/_auth/profile'
       path: '/profile'
@@ -210,24 +197,24 @@ declare module '@tanstack/react-router' {
     }
     '/_auth/dashboard/': {
       id: '/_auth/dashboard/'
-      path: '/'
+      path: '/dashboard'
       fullPath: '/dashboard/'
       preLoaderRoute: typeof AuthDashboardIndexRouteImport
-      parentRoute: typeof AuthDashboardRoute
+      parentRoute: typeof AuthRoute
     }
     '/_auth/dashboard/_admin': {
       id: '/_auth/dashboard/_admin'
-      path: ''
+      path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof AuthDashboardAdminRouteImport
-      parentRoute: typeof AuthDashboardRoute
+      parentRoute: typeof AuthRoute
     }
     '/_auth/dashboard/_doctor': {
       id: '/_auth/dashboard/_doctor'
-      path: ''
+      path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof AuthDashboardDoctorRouteImport
-      parentRoute: typeof AuthDashboardRoute
+      parentRoute: typeof AuthRoute
     }
     '/_auth/dashboard/_admin/doctors': {
       id: '/_auth/dashboard/_admin/doctors'
@@ -280,32 +267,20 @@ const AuthDashboardDoctorRouteChildren: AuthDashboardDoctorRouteChildren = {
 const AuthDashboardDoctorRouteWithChildren =
   AuthDashboardDoctorRoute._addFileChildren(AuthDashboardDoctorRouteChildren)
 
-interface AuthDashboardRouteChildren {
+interface AuthRouteChildren {
+  AuthPatientRoute: typeof AuthPatientRouteWithChildren
+  AuthProfileRoute: typeof AuthProfileRoute
   AuthDashboardAdminRoute: typeof AuthDashboardAdminRouteWithChildren
   AuthDashboardDoctorRoute: typeof AuthDashboardDoctorRouteWithChildren
   AuthDashboardIndexRoute: typeof AuthDashboardIndexRoute
 }
 
-const AuthDashboardRouteChildren: AuthDashboardRouteChildren = {
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthPatientRoute: AuthPatientRouteWithChildren,
+  AuthProfileRoute: AuthProfileRoute,
   AuthDashboardAdminRoute: AuthDashboardAdminRouteWithChildren,
   AuthDashboardDoctorRoute: AuthDashboardDoctorRouteWithChildren,
   AuthDashboardIndexRoute: AuthDashboardIndexRoute,
-}
-
-const AuthDashboardRouteWithChildren = AuthDashboardRoute._addFileChildren(
-  AuthDashboardRouteChildren,
-)
-
-interface AuthRouteChildren {
-  AuthPatientRoute: typeof AuthPatientRouteWithChildren
-  AuthDashboardRoute: typeof AuthDashboardRouteWithChildren
-  AuthProfileRoute: typeof AuthProfileRoute
-}
-
-const AuthRouteChildren: AuthRouteChildren = {
-  AuthPatientRoute: AuthPatientRouteWithChildren,
-  AuthDashboardRoute: AuthDashboardRouteWithChildren,
-  AuthProfileRoute: AuthProfileRoute,
 }
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
