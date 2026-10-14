@@ -12,9 +12,15 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as RegisterRouteImport } from './routes/register'
+import { Route as AuthPatientRouteImport } from './routes/_auth/_patient'
 import { Route as AuthDashboardRouteImport } from './routes/_auth/dashboard'
 import { Route as AuthProfileRouteImport } from './routes/_auth/profile'
-import { Route as AuthReservationRouteImport } from './routes/_auth/reservation'
+import { Route as AuthPatientReservationRouteImport } from './routes/_auth/_patient/reservation'
+import { Route as AuthDashboardIndexRouteImport } from './routes/_auth/dashboard/index'
+import { Route as AuthDashboardAdminRouteImport } from './routes/_auth/dashboard/_admin'
+import { Route as AuthDashboardDoctorRouteImport } from './routes/_auth/dashboard/_doctor'
+import { Route as AuthDashboardAdminDoctorsRouteImport } from './routes/_auth/dashboard/_admin/doctors'
+import { Route as AuthDashboardDoctorScheduleRouteImport } from './routes/_auth/dashboard/_doctor/schedule'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -30,6 +36,10 @@ const RegisterRoute = RegisterRouteImport.update({
   path: '/register',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthPatientRoute = AuthPatientRouteImport.update({
+  id: '/_patient',
+  getParentRoute: () => AuthRoute,
+} as any)
 const AuthDashboardRoute = AuthDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -40,48 +50,105 @@ const AuthProfileRoute = AuthProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => AuthRoute,
 } as any)
-const AuthReservationRoute = AuthReservationRouteImport.update({
+const AuthPatientReservationRoute = AuthPatientReservationRouteImport.update({
   id: '/reservation',
   path: '/reservation',
-  getParentRoute: () => AuthRoute,
+  getParentRoute: () => AuthPatientRoute,
 } as any)
+const AuthDashboardIndexRoute = AuthDashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthDashboardRoute,
+} as any)
+const AuthDashboardAdminRoute = AuthDashboardAdminRouteImport.update({
+  id: '/_admin',
+  getParentRoute: () => AuthDashboardRoute,
+} as any)
+const AuthDashboardDoctorRoute = AuthDashboardDoctorRouteImport.update({
+  id: '/_doctor',
+  getParentRoute: () => AuthDashboardRoute,
+} as any)
+const AuthDashboardAdminDoctorsRoute =
+  AuthDashboardAdminDoctorsRouteImport.update({
+    id: '/doctors',
+    path: '/doctors',
+    getParentRoute: () => AuthDashboardAdminRoute,
+  } as any)
+const AuthDashboardDoctorScheduleRoute =
+  AuthDashboardDoctorScheduleRouteImport.update({
+    id: '/schedule',
+    path: '/schedule',
+    getParentRoute: () => AuthDashboardDoctorRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/register': typeof RegisterRoute
-  '/dashboard': typeof AuthDashboardRoute
+  '/dashboard': typeof AuthDashboardRouteWithChildren
   '/profile': typeof AuthProfileRoute
-  '/reservation': typeof AuthReservationRoute
+  '/reservation': typeof AuthPatientReservationRoute
+  '/dashboard/': typeof AuthDashboardIndexRoute
+  '/dashboard/doctors': typeof AuthDashboardAdminDoctorsRoute
+  '/dashboard/schedule': typeof AuthDashboardDoctorScheduleRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/register': typeof RegisterRoute
-  '/dashboard': typeof AuthDashboardRoute
   '/profile': typeof AuthProfileRoute
-  '/reservation': typeof AuthReservationRoute
+  '/reservation': typeof AuthPatientReservationRoute
+  '/dashboard': typeof AuthDashboardIndexRoute
+  '/dashboard/doctors': typeof AuthDashboardAdminDoctorsRoute
+  '/dashboard/schedule': typeof AuthDashboardDoctorScheduleRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteWithChildren
   '/register': typeof RegisterRoute
-  '/_auth/dashboard': typeof AuthDashboardRoute
+  '/_auth/_patient': typeof AuthPatientRouteWithChildren
+  '/_auth/dashboard': typeof AuthDashboardRouteWithChildren
   '/_auth/profile': typeof AuthProfileRoute
-  '/_auth/reservation': typeof AuthReservationRoute
+  '/_auth/_patient/reservation': typeof AuthPatientReservationRoute
+  '/_auth/dashboard/_admin': typeof AuthDashboardAdminRouteWithChildren
+  '/_auth/dashboard/_doctor': typeof AuthDashboardDoctorRouteWithChildren
+  '/_auth/dashboard/': typeof AuthDashboardIndexRoute
+  '/_auth/dashboard/_admin/doctors': typeof AuthDashboardAdminDoctorsRoute
+  '/_auth/dashboard/_doctor/schedule': typeof AuthDashboardDoctorScheduleRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/register' | '/dashboard' | '/profile' | '/reservation'
+  fullPaths:
+    | '/'
+    | '/register'
+    | '/dashboard'
+    | '/profile'
+    | '/reservation'
+    | '/dashboard/'
+    | '/dashboard/doctors'
+    | '/dashboard/schedule'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/register' | '/dashboard' | '/profile' | '/reservation'
+  to:
+    | '/'
+    | '/register'
+    | '/profile'
+    | '/reservation'
+    | '/dashboard'
+    | '/dashboard/doctors'
+    | '/dashboard/schedule'
   id:
     | '__root__'
     | '/'
     | '/_auth'
     | '/register'
+    | '/_auth/_patient'
     | '/_auth/dashboard'
     | '/_auth/profile'
-    | '/_auth/reservation'
+    | '/_auth/_patient/reservation'
+    | '/_auth/dashboard/_admin'
+    | '/_auth/dashboard/_doctor'
+    | '/_auth/dashboard/'
+    | '/_auth/dashboard/_admin/doctors'
+    | '/_auth/dashboard/_doctor/schedule'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -113,6 +180,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_auth/_patient': {
+      id: '/_auth/_patient'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthPatientRouteImport
+      parentRoute: typeof AuthRoute
+    }
     '/_auth/dashboard': {
       id: '/_auth/dashboard'
       path: '/dashboard'
@@ -127,26 +201,111 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthProfileRouteImport
       parentRoute: typeof AuthRoute
     }
-    '/_auth/reservation': {
-      id: '/_auth/reservation'
+    '/_auth/_patient/reservation': {
+      id: '/_auth/_patient/reservation'
       path: '/reservation'
       fullPath: '/reservation'
-      preLoaderRoute: typeof AuthReservationRouteImport
-      parentRoute: typeof AuthRoute
+      preLoaderRoute: typeof AuthPatientReservationRouteImport
+      parentRoute: typeof AuthPatientRoute
+    }
+    '/_auth/dashboard/': {
+      id: '/_auth/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof AuthDashboardIndexRouteImport
+      parentRoute: typeof AuthDashboardRoute
+    }
+    '/_auth/dashboard/_admin': {
+      id: '/_auth/dashboard/_admin'
+      path: ''
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthDashboardAdminRouteImport
+      parentRoute: typeof AuthDashboardRoute
+    }
+    '/_auth/dashboard/_doctor': {
+      id: '/_auth/dashboard/_doctor'
+      path: ''
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthDashboardDoctorRouteImport
+      parentRoute: typeof AuthDashboardRoute
+    }
+    '/_auth/dashboard/_admin/doctors': {
+      id: '/_auth/dashboard/_admin/doctors'
+      path: '/doctors'
+      fullPath: '/dashboard/doctors'
+      preLoaderRoute: typeof AuthDashboardAdminDoctorsRouteImport
+      parentRoute: typeof AuthDashboardAdminRoute
+    }
+    '/_auth/dashboard/_doctor/schedule': {
+      id: '/_auth/dashboard/_doctor/schedule'
+      path: '/schedule'
+      fullPath: '/dashboard/schedule'
+      preLoaderRoute: typeof AuthDashboardDoctorScheduleRouteImport
+      parentRoute: typeof AuthDashboardDoctorRoute
     }
   }
 }
 
+interface AuthPatientRouteChildren {
+  AuthPatientReservationRoute: typeof AuthPatientReservationRoute
+}
+
+const AuthPatientRouteChildren: AuthPatientRouteChildren = {
+  AuthPatientReservationRoute: AuthPatientReservationRoute,
+}
+
+const AuthPatientRouteWithChildren = AuthPatientRoute._addFileChildren(
+  AuthPatientRouteChildren,
+)
+
+interface AuthDashboardAdminRouteChildren {
+  AuthDashboardAdminDoctorsRoute: typeof AuthDashboardAdminDoctorsRoute
+}
+
+const AuthDashboardAdminRouteChildren: AuthDashboardAdminRouteChildren = {
+  AuthDashboardAdminDoctorsRoute: AuthDashboardAdminDoctorsRoute,
+}
+
+const AuthDashboardAdminRouteWithChildren =
+  AuthDashboardAdminRoute._addFileChildren(AuthDashboardAdminRouteChildren)
+
+interface AuthDashboardDoctorRouteChildren {
+  AuthDashboardDoctorScheduleRoute: typeof AuthDashboardDoctorScheduleRoute
+}
+
+const AuthDashboardDoctorRouteChildren: AuthDashboardDoctorRouteChildren = {
+  AuthDashboardDoctorScheduleRoute: AuthDashboardDoctorScheduleRoute,
+}
+
+const AuthDashboardDoctorRouteWithChildren =
+  AuthDashboardDoctorRoute._addFileChildren(AuthDashboardDoctorRouteChildren)
+
+interface AuthDashboardRouteChildren {
+  AuthDashboardAdminRoute: typeof AuthDashboardAdminRouteWithChildren
+  AuthDashboardDoctorRoute: typeof AuthDashboardDoctorRouteWithChildren
+  AuthDashboardIndexRoute: typeof AuthDashboardIndexRoute
+}
+
+const AuthDashboardRouteChildren: AuthDashboardRouteChildren = {
+  AuthDashboardAdminRoute: AuthDashboardAdminRouteWithChildren,
+  AuthDashboardDoctorRoute: AuthDashboardDoctorRouteWithChildren,
+  AuthDashboardIndexRoute: AuthDashboardIndexRoute,
+}
+
+const AuthDashboardRouteWithChildren = AuthDashboardRoute._addFileChildren(
+  AuthDashboardRouteChildren,
+)
+
 interface AuthRouteChildren {
-  AuthDashboardRoute: typeof AuthDashboardRoute
+  AuthPatientRoute: typeof AuthPatientRouteWithChildren
+  AuthDashboardRoute: typeof AuthDashboardRouteWithChildren
   AuthProfileRoute: typeof AuthProfileRoute
-  AuthReservationRoute: typeof AuthReservationRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
-  AuthDashboardRoute: AuthDashboardRoute,
+  AuthPatientRoute: AuthPatientRouteWithChildren,
+  AuthDashboardRoute: AuthDashboardRouteWithChildren,
   AuthProfileRoute: AuthProfileRoute,
-  AuthReservationRoute: AuthReservationRoute,
 }
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
