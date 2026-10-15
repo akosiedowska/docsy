@@ -9,7 +9,7 @@ A pet project — a web app for booking medical appointments. Users can register
 - React 19 + TypeScript
 - Vite
 - Mantine UI
-- React Router
+- Tanstack Router
 - React Hook Form + Zod (forms & validation)
 - TanStack Query (data fetching/caching)
 - Zustand (state management)
