@@ -1,9 +1,8 @@
-import { Group, NavLink, Tooltip } from '@mantine/core'
+import { ActionIcon, Group, NavLink, Tooltip } from '@mantine/core'
 import { Link, useMatchRoute } from '@tanstack/react-router'
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react'
 
 import { type SidebarLink } from '../../app/sidebarLinks'
-import { palette } from '../../styles/colors'
 
 interface SidebarProps {
   collapsed: boolean
@@ -17,7 +16,14 @@ const Sidebar = ({ collapsed, onToggle, links }: SidebarProps) => {
   return (
     <>
       <Group justify='end'>
-        {collapsed ? <PanelLeftOpen onClick={onToggle} /> : <PanelLeftClose onClick={onToggle} />}
+        <ActionIcon
+          variant='subtle'
+          color='gray'
+          onClick={onToggle}
+          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        >
+          {collapsed ? <PanelLeftOpen size={20} /> : <PanelLeftClose size={20} />}
+        </ActionIcon>
       </Group>
       {links.map((l) => (
         <Tooltip label={l.label} position='right' disabled={!collapsed} key={l.to}>
