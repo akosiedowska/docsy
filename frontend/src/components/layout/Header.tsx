@@ -42,9 +42,11 @@ const Header = () => {
         )}
         {isAuthenticated ? (
           <Group align='center' gap='xl'>
-            <Anchor component={Link} to={paths.RESERVATION} visibleFrom='sm'>
-              <Button leftSection={<Plus />}>Book</Button>
-            </Anchor>
+            {user?.role === 'PATIENT' ? (
+              <Anchor component={Link} to={paths.RESERVATION} visibleFrom='sm'>
+                <Button leftSection={<Plus />}>Book</Button>
+              </Anchor>
+            ) : null}
             <Menu shadow='md' width={220} position='bottom-end'>
               <Menu.Target>
                 <Avatar

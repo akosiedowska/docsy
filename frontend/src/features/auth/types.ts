@@ -9,6 +9,7 @@ export type AuthUser = {
   firstName: string
   lastName: string
   createdAt: string
+  role: UserRole
 }
 
 export type AuthResponse = {
@@ -26,5 +27,7 @@ export type RegisterPayload = {
 export type RegisterResponse = AuthUser
 
 export type RefreshResponse = {
-    accessToken: string
+  accessToken: string
 }
+
+export type UserRole = 'PATIENT' | 'DOCTOR' | 'ADMIN'
