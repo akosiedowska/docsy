@@ -35,7 +35,6 @@ const getDoctorAppointments = async (
   reply: FastifyReply,
 ) => {
   const { sub: userId } = request.user as { sub: string }
-  console.log('user id', userId)
   const result = await appointmentService.getAppointmentsByDoctorsUserId(userId, request.query)
   reply.code(200).send(result)
 }

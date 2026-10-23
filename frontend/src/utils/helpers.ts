@@ -19,3 +19,11 @@ export const getGreeting = () => {
   }
   return 'Good evening'
 }
+
+export const formatDate = (date: string) =>
+  new Date(date).toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })

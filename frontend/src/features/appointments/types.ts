@@ -57,4 +57,5 @@ export type DoctorAppointment = {
 export type DoctorAppointmentsParams = {
   conducted: boolean
   sort: string
+  limit?: number
 }

@@ -39,13 +39,6 @@ const DoctorAppointmentCard = ({ appointment, variant }: DoctorAppointmentCardPr
                 {appointment.patient.user.firstName} {appointment.patient.user.lastName}
               </Text>
             </Group>
-            <Text variant='body2' color='text.secondary'>
-              {new Date(appointment.slot.date).toLocaleString('en-US', {
-                year: 'numeric',
-                month: 'numeric',
-                day: 'numeric',
-              })}
-            </Text>
             <Text c={palette.grayText} size='xs'>
               {appointment.slot.address}
             </Text>

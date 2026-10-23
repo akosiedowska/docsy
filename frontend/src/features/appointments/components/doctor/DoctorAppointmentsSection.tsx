@@ -1,11 +1,13 @@
 import type { UseQueryResult } from '@tanstack/react-query'
+import { Group, Stack, Text } from '@mantine/core'
+import { SquareArrowRight } from 'lucide-react'
 
+import DoctorAppointmentCard from './DoctorAppointmentCard'
 import type { DoctorAppointment } from '../../types'
 import { LoadingSpinner } from '../../../../components/ui/LoadingSpinner'
-import { Stack, Text } from '@mantine/core'
-import DoctorAppointmentCard from './DoctorAppointmentCard'
 import { palette } from '../../../../styles/colors'
 import { getApiErrorMessage } from '../../../../api/getApiErrorMesage'
+import { formatDate } from '../../../../utils/helpers'
 
 type AppointmentSectionProps = {
   title: string
@@ -21,8 +23,26 @@ const AppointmentSection = ({ title, variant, query }: AppointmentSectionProps) 
     if (isError) return <Text c={palette.alert}>{getApiErrorMessage(error)}</Text>
     if (data.length === 0) return <Text>No appointments yet.</Text>
 
-    return data.map((appointment) => (
-      <DoctorAppointmentCard appointment={appointment} key={appointment.id} variant={variant} />
+    const groups = data.reduce((acc, appointment) => {
+      const date = formatDate(appointment.slot.date)
+      acc.set(date, [...(acc.get(date) ?? []), appointment])
+      return acc
+    }, new Map<string, DoctorAppointment[]>())
+
+    const today = formatDate(new Date().toISOString())
+
+    return Array.from(groups, ([date, appointments]) => (
+      <Stack key={date} gap='8'>
+        <Group gap='6'>
+          {date === today ? <SquareArrowRight color={palette.violet} size='20' /> : null}
+          <Text fw='600' c={date === today ? 'violet.6' : 'dimmed'}>
+            {date}
+          </Text>
+        </Group>
+        {appointments.map((appointment) => (
+          <DoctorAppointmentCard appointment={appointment} key={appointment.id} variant={variant} />
+        ))}
+      </Stack>
     ))
   }
 

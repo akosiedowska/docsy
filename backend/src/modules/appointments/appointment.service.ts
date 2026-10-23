@@ -110,7 +110,7 @@ const getAppointmentsByUserId = async (userId: string) => {
 
 const getAppointmentsByDoctorsUserId = async (
   userId: string,
-  { conducted, sort }: DoctorAppointmentsQuery,
+  { conducted, sort, limit }: DoctorAppointmentsQuery,
 ) => {
   const doctor = await prisma.doctor.findUnique({ where: { userId } })
   if (!doctor) throw new NotFoundError('Doctor not found')
@@ -118,6 +118,7 @@ const getAppointmentsByDoctorsUserId = async (
   return prisma.appointment.findMany({
     where: { slot: { doctorId: doctor.id }, cancelled: false, conducted },
     orderBy: { slot: { date: sort } },
+    take: limit,
     select: {
       id: true,
       conducted: true,
