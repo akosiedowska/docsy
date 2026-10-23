@@ -1,12 +1,12 @@
 import { Stack } from '@mantine/core'
 import DashboardGreeting from '../../features/dashboard/components/DashboardGreeting'
-import AppointmentList from '../../features/appointments/components/patient/AppointmentList'
+import DoctorAppointmentList from '../../features/appointments/components/doctor/DoctorAppointmentList'
 
 const DashboardPage = () => {
   return (
     <Stack gap='36'>
       <DashboardGreeting />
-      <AppointmentList />
+      <DoctorAppointmentList />
     </Stack>
   )
 }
