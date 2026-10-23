@@ -112,7 +112,7 @@ const getAppointmentsByDoctorsUserId = async (
   userId: string,
   { conducted, sort }: DoctorAppointmentsQuery,
 ) => {
-  const doctor = await prisma.patient.findUnique({ where: { userId } })
+  const doctor = await prisma.doctor.findUnique({ where: { userId } })
   if (!doctor) throw new NotFoundError('Doctor not found')
 
   return prisma.appointment.findMany({

@@ -1,5 +1,11 @@
 import { apiClient } from '../../api/client'
-import type { Appointment, AvailableSlot, CreateAppointmentBody } from './types'
+import type {
+  Appointment,
+  AvailableSlot,
+  CreateAppointmentBody,
+  DoctorAppointment,
+  DoctorAppointmentsParams,
+} from './types'
 
 export const getSpecializations = () => {
   return apiClient.get<string[]>('/specializations').then((r) => r.data)
@@ -26,3 +32,6 @@ export const getAppointments = () => {
 export const cancelAppointment = (id: string) => {
   return apiClient.patch<Appointment>(`/appointments/${id}/cancel`).then((r) => r.data)
 }
+
+export const getDoctorAppointments = (params: DoctorAppointmentsParams) =>
+  apiClient.get<DoctorAppointment[]>('/appointments/doctor', { params }).then((r) => r.data)
