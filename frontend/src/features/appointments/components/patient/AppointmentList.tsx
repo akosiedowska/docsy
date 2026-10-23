@@ -4,16 +4,23 @@ import { AppointmentCard } from './AppointmentCard'
 import { useAppointments } from '../../hooks/useAppointments'
 import type { Appointment } from '../../types'
 import { LoadingSpinner } from '../../../../components/ui/LoadingSpinner'
+import { useEffect } from 'react'
+import { getApiErrorMessage } from '../../../../api/getApiErrorMesage'
+import { palette } from '../../../../styles/colors'
 
 const AppointmentList = () => {
   const { isPending, isError, data: appointments, error } = useAppointments()
+
+  useEffect(() => {
+    console.log('ERROR', error?.message)
+  }, [error])
 
   if (isPending) {
     return <LoadingSpinner />
   }
 
   if (isError) {
-    return <Text color='error'>{error.message}</Text>
+    return <Text c={palette.alert}>{getApiErrorMessage(error)}</Text>
   }
 
   const nextAppointments = appointments.filter(

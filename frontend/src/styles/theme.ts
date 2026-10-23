@@ -43,6 +43,7 @@ export const theme = createTheme({
     black: palette.black,
     limeText: palette.limeText,
     grayText: palette.grayText,
+    alert: palette.alert,
   },
   components: {
     Button: Button.extend({
