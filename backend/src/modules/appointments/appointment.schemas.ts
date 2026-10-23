@@ -34,3 +34,22 @@ export type AppointmentIdParams = z.infer<typeof appointmentIdParamsSchema>
 export const appointmentsResponseSchema = z.array(appointmentResponseSchema)
 
 export type AppointmentsResponse = z.infer<typeof appointmentsResponseSchema>
+
+export const doctorAppointmentsQuerySchema = z.object({
+  conducted: z.stringbool().default(false),
+  sort: z.enum(['asc', 'desc']).default('asc'),
+  limit: z.coerce.number().int().positive().max(100).optional(),
+})
+export type DoctorAppointmentsQuery = z.infer<typeof doctorAppointmentsQuerySchema>
+
+export const doctorAppointmentResponseSchema = z.object({
+  id: z.uuid(),
+  conducted: z.boolean(),
+  cancelled: z.boolean(),
+  slot: z.object({ id: z.uuid(), date: z.date(), address: z.string() }),
+  patient: z.object({
+    id: z.uuid(),
+    user: z.object({ firstName: z.string(), lastName: z.string() }),
+  }),
+})
+export const doctorAppointmentsResponseSchema = z.array(doctorAppointmentResponseSchema)

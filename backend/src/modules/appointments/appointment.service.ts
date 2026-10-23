@@ -1,5 +1,6 @@
 import { prisma } from '../../db/prisma'
 import { ConflictError, NotFoundError } from '../../errors/http-error'
+import { DoctorAppointmentsQuery } from './appointment.schemas'
 
 const bookAppointment = async (slotId: string, userId: string) => {
   return prisma.$transaction(async (tx) => {
@@ -107,8 +108,31 @@ const getAppointmentsByUserId = async (userId: string) => {
   })
 }
 
+const getAppointmentsByDoctorsUserId = async (
+  userId: string,
+  { conducted, sort }: DoctorAppointmentsQuery,
+) => {
+  const doctor = await prisma.patient.findUnique({ where: { userId } })
+  if (!doctor) throw new NotFoundError('Doctor not found')
+
+  return prisma.appointment.findMany({
+    where: { slot: { doctorId: doctor.id }, cancelled: false, conducted },
+    orderBy: { slot: { date: sort } },
+    select: {
+      id: true,
+      conducted: true,
+      cancelled: true,
+      slot: { select: { id: true, date: true, address: true } },
+      patient: {
+        select: { id: true, user: { select: { firstName: true, lastName: true } } },
+      },
+    },
+  })
+}
+
 export const appointmentService = {
   bookAppointment,
   cancelAppointment,
   getAppointmentsByUserId,
+  getAppointmentsByDoctorsUserId,
 }
