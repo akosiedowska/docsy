@@ -12,6 +12,8 @@ import {
 } from './appointment.schemas'
 import { appointmentController } from './appointment.controller'
 import { cancelAppointmentPolicy } from './appointment.policy'
+import { requireRole } from '../../middleware/requireRole'
+import { Role } from '../../../generated/prisma/enums'
 
 export const appointmentRoutes: FastifyPluginAsyncZod = async (fastify) => {
   fastify.post(
@@ -41,7 +43,7 @@ export const appointmentRoutes: FastifyPluginAsyncZod = async (fastify) => {
   fastify.get(
     '/appointments',
     {
-      preHandler: authenticate,
+      preHandler: [authenticate, requireRole(Role.PATIENT, Role.ADMIN)],
       schema: {
         response: { 200: appointmentsResponseSchema },
       },
@@ -52,7 +54,7 @@ export const appointmentRoutes: FastifyPluginAsyncZod = async (fastify) => {
   fastify.get(
     '/appointments/doctor',
     {
-      preHandler: authenticate,
+      preHandler: [authenticate, requireRole(Role.DOCTOR, Role.ADMIN)],
       schema: {
         querystring: doctorAppointmentsQuerySchema,
         response: { 200: doctorAppointmentsResponseSchema },

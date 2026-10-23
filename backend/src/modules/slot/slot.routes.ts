@@ -9,6 +9,7 @@ import {
 } from './slot.schema'
 import { authenticate } from '../../middleware/authenticate'
 import { requireRole } from '../../middleware/requireRole'
+import { Role } from '../../../generated/prisma/enums'
 
 export const slotRoutes: FastifyPluginAsyncZod = async (fastify) => {
   fastify.addHook('preHandler', authenticate)
@@ -26,7 +27,7 @@ export const slotRoutes: FastifyPluginAsyncZod = async (fastify) => {
   fastify.patch(
     '/slots/:id',
     {
-      preHandler: requireRole('ADMIN'),
+      preHandler: requireRole(Role.ADMIN),
       schema: {
         params: slotIdParamsSchema,
         body: updateSlotBodySchema,
