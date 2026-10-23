@@ -44,7 +44,7 @@ export const AppointmentCard = ({ appointment, variant }: AppointmentCardProps) 
               </Text>
             </Stack>
 
-            <Box className={`${classes.dateBox} ${classes[`${variant}Date`]}`}>
+            <Box className={`${classes.dateBox} ${classes[`${variant}Box`]}`}>
               <Box className={classes.date}>
                 <Text className={classes.day}>{date.getDate()}</Text>
                 <Text className={classes.month}>
