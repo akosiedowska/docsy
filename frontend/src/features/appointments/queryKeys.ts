@@ -7,6 +7,7 @@ export const appointmentsKeys = {
   },
   specializations: ['specializations'] as const,
   appointments: ['appointments'] as const,
+  appointment: ['appointment'] as const,
   doctorAppointments: (params: DoctorAppointmentsParams) =>
     ['appointments', 'doctor', params] as const,
 }

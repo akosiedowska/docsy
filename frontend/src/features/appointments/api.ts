@@ -35,3 +35,6 @@ export const cancelAppointment = (id: string) => {
 
 export const getDoctorAppointments = (params: DoctorAppointmentsParams) =>
   apiClient.get<DoctorAppointment[]>('/appointments/doctor', { params }).then((r) => r.data)
+
+export const getAppointmentById = (id: string) =>
+  apiClient.get<Appointment>(`/appointments/${id}`).then((r) => r.data)

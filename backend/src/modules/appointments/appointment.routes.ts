@@ -13,7 +13,11 @@ import {
   updateAppointmentBodySchema,
 } from './appointment.schemas'
 import { appointmentController } from './appointment.controller'
-import { cancelAppointmentPolicy, viewAppointmentPolicy } from './appointment.policy'
+import {
+  cancelAppointmentPolicy,
+  updateAppointmentPolicy,
+  viewAppointmentPolicy,
+} from './appointment.policy'
 import { requireRole } from '../../middleware/requireRole'
 import { Role } from '../../../generated/prisma/enums'
 
@@ -80,7 +84,11 @@ export const appointmentRoutes: FastifyPluginAsyncZod = async (fastify) => {
   fastify.patch(
     '/appointments/:id',
     {
-      preHandler: [authenticate, requireRole(Role.DOCTOR, Role.ADMIN)],
+      preHandler: [
+        authenticate,
+        requireRole(Role.DOCTOR, Role.ADMIN),
+        authorize(updateAppointmentPolicy),
+      ],
       schema: {
         params: appointmentIdParamsSchema,
         body: updateAppointmentBodySchema,
