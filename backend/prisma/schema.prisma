@@ -81,6 +81,7 @@ model Appointment {
  conducted  Boolean  @default(false)
  cancelled  Boolean  @default(false)
  createdAt  DateTime @default(now())
+ description String?
 
  @@index([patientId])
  @@index([slotId])

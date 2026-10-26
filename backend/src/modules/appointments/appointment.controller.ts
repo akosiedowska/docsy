@@ -39,9 +39,18 @@ const getDoctorAppointments = async (
   reply.code(200).send(result)
 }
 
+const getAppointmentById = async (
+  request: FastifyRequest<{ Params: AppointmentIdParams }>,
+  reply: FastifyReply,
+) => {
+  const result = await appointmentService.getAppointmentById(request.params.id)
+  reply.code(200).send(result)
+}
+
 export const appointmentController = {
   bookAppointment,
   cancelAppointment,
   getPatientAppointments,
   getDoctorAppointments,
+  getAppointmentById,
 }

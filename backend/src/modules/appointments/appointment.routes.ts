@@ -3,6 +3,7 @@ import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { authenticate } from '../../middleware/authenticate'
 import { authorize } from '../../middleware/authorize'
 import {
+  appointmentDetailResponseSchema,
   appointmentIdParamsSchema,
   appointmentResponseSchema,
   appointmentsResponseSchema,
@@ -11,7 +12,7 @@ import {
   doctorAppointmentsResponseSchema,
 } from './appointment.schemas'
 import { appointmentController } from './appointment.controller'
-import { cancelAppointmentPolicy } from './appointment.policy'
+import { cancelAppointmentPolicy, viewAppointmentPolicy } from './appointment.policy'
 import { requireRole } from '../../middleware/requireRole'
 import { Role } from '../../../generated/prisma/enums'
 
@@ -61,5 +62,17 @@ export const appointmentRoutes: FastifyPluginAsyncZod = async (fastify) => {
       },
     },
     appointmentController.getDoctorAppointments,
+  )
+
+  fastify.get(
+    '/appointments/:id',
+    {
+      preHandler: [authenticate, authorize(viewAppointmentPolicy)],
+      schema: {
+        params: appointmentIdParamsSchema,
+        response: { 200: appointmentDetailResponseSchema },
+      },
+    },
+    appointmentController.getAppointmentById,
   )
 }

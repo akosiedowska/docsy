@@ -60,6 +60,7 @@ const cancelAppointment = async (id: string) => {
         id: true,
         conducted: true,
         cancelled: true,
+        description: true,
         slot: {
           select: {
             id: true,
@@ -90,6 +91,7 @@ const getAppointmentsByUserId = async (userId: string) => {
       id: true,
       conducted: true,
       cancelled: true,
+      description: true,
       slot: {
         select: {
           id: true,
@@ -123,6 +125,7 @@ const getAppointmentsByDoctorsUserId = async (
       id: true,
       conducted: true,
       cancelled: true,
+      description: true,
       slot: { select: { id: true, date: true, address: true } },
       patient: {
         select: { id: true, user: { select: { firstName: true, lastName: true } } },
@@ -131,9 +134,50 @@ const getAppointmentsByDoctorsUserId = async (
   })
 }
 
+export const getAppointmentById = async (id: string) => {
+  const appointment = await prisma.appointment.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      conducted: true,
+      cancelled: true,
+      description: true,
+      slot: {
+        select: {
+          id: true,
+          date: true,
+          address: true,
+          doctor: {
+            select: {
+              id: true,
+              specialization: true,
+              user: { select: { firstName: true, lastName: true } },
+            },
+          },
+        },
+      },
+      patient: {
+        select: {
+          id: true,
+          user: {
+            select: {
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
+      },
+    },
+  })
+  if (!appointment) throw new NotFoundError('Appointment not found')
+
+  return appointment
+}
+
 export const appointmentService = {
   bookAppointment,
   cancelAppointment,
   getAppointmentsByUserId,
   getAppointmentsByDoctorsUserId,
+  getAppointmentById,
 }

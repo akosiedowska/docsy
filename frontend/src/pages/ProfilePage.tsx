@@ -1,4 +1,4 @@
-import ProfileDetails from '../../features/profile/components/ProfileDetails'
+import ProfileDetails from '../features/profile/components/ProfileDetails'
 
 const ProfilePage = () => {
   return <ProfileDetails />

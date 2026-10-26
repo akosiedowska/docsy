@@ -10,6 +10,7 @@ export const appointmentResponseSchema = z.object({
   id: z.uuid(),
   conducted: z.boolean(),
   cancelled: z.boolean(),
+  description: z.string().nullable(),
   slot: z.object({
     id: z.uuid(),
     date: z.date(),
@@ -22,6 +23,13 @@ export const appointmentResponseSchema = z.object({
         lastName: z.string(),
       }),
     }),
+  }),
+})
+
+export const appointmentDetailResponseSchema = appointmentResponseSchema.extend({
+  patient: z.object({
+    id: z.uuid(),
+    user: z.object({ firstName: z.string(), lastName: z.string() }),
   }),
 })
 
