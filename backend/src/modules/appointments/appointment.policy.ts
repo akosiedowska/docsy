@@ -41,3 +41,19 @@ export const viewAppointmentPolicy: AuthorizePolicy<AppointmentWithParticipants>
   notFoundMessage: 'Appointment not found',
   forbiddenMessage: 'You can only view your own appointments',
 }
+
+const canUpdate = (user: CurrentUser, appointment: AppointmentWithParticipants) =>
+  user.role === 'ADMIN' || appointment.slot.doctor.userId === user.id
+
+export const updateAppointmentPolicy: AuthorizePolicy<AppointmentWithParticipants> = {
+  getResource: (request) => {
+    const { id } = request.params as AppointmentIdParams
+    return prisma.appointment.findUnique({
+      where: { id },
+      include: { patient: true, slot: { include: { doctor: true } } },
+    })
+  },
+  isAllowed: canUpdate,
+  notFoundMessage: 'Appointment not found',
+  forbiddenMessage: 'You can only edit your own appointments',
+}

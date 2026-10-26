@@ -10,6 +10,7 @@ import {
   createAppointmentBodySchema,
   doctorAppointmentsQuerySchema,
   doctorAppointmentsResponseSchema,
+  updateAppointmentBodySchema,
 } from './appointment.schemas'
 import { appointmentController } from './appointment.controller'
 import { cancelAppointmentPolicy, viewAppointmentPolicy } from './appointment.policy'
@@ -74,5 +75,18 @@ export const appointmentRoutes: FastifyPluginAsyncZod = async (fastify) => {
       },
     },
     appointmentController.getAppointmentById,
+  )
+
+  fastify.patch(
+    '/appointments/:id',
+    {
+      preHandler: [authenticate, requireRole(Role.DOCTOR, Role.ADMIN)],
+      schema: {
+        params: appointmentIdParamsSchema,
+        body: updateAppointmentBodySchema,
+        response: { 200: appointmentDetailResponseSchema },
+      },
+    },
+    appointmentController.updateAppointmentById,
   )
 }

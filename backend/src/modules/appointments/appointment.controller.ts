@@ -5,6 +5,7 @@ import type {
   AppointmentIdParams,
   CreateAppointmentBody,
   DoctorAppointmentsQuery,
+  UpdateAppointmentBody,
 } from './appointment.schemas'
 
 const bookAppointment = async (
@@ -47,10 +48,19 @@ const getAppointmentById = async (
   reply.code(200).send(result)
 }
 
+const updateAppointmentById = async (
+  request: FastifyRequest<{ Params: AppointmentIdParams; Body: UpdateAppointmentBody }>,
+  reply: FastifyReply,
+) => {
+  const result = await appointmentService.updateAppointmentById(request.params.id, request.body)
+  reply.code(200).send(result)
+}
+
 export const appointmentController = {
   bookAppointment,
   cancelAppointment,
   getPatientAppointments,
   getDoctorAppointments,
   getAppointmentById,
+  updateAppointmentById,
 }

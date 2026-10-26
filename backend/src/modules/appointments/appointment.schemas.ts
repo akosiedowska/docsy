@@ -61,3 +61,10 @@ export const doctorAppointmentResponseSchema = z.object({
   }),
 })
 export const doctorAppointmentsResponseSchema = z.array(doctorAppointmentResponseSchema)
+
+export const updateAppointmentBodySchema = z.object({
+  description: z.string().nullable().optional(),
+  conducted: z.boolean().optional(),
+})
+
+export type UpdateAppointmentBody = z.infer<typeof updateAppointmentBodySchema>
