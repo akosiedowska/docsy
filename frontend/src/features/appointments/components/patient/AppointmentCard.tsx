@@ -3,8 +3,10 @@ import { Box, Button, Card, Group, Stack, Text } from '@mantine/core'
 import { CircleAlert } from 'lucide-react'
 
 import type { Appointment } from '../../types'
+import { paths } from '../../../../app/paths'
 import { useCancelAppointment } from '../../hooks/useCancelAppoinment'
 import AlertDialog from '../../../../components/ui/AlertDialog'
+import ButtonLink from '../../../../components/ui/ButtonLink'
 
 import classes from './AppointmentCard.module.css'
 
@@ -67,6 +69,17 @@ export const AppointmentCard = ({ appointment, variant }: AppointmentCardProps) 
               </Button>
               {/* to be implemented */}
               {/* <Button>Reschedule</Button> */}
+            </Group>
+          )}
+          {appointment.conducted == true && (
+            <Group justify='end'>
+              <ButtonLink
+                variant='default'
+                to={paths.APPOINTMENT}
+                params={{ appointmentId: appointment.id }}
+              >
+                Details
+              </ButtonLink>
             </Group>
           )}
         </Stack>

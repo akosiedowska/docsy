@@ -40,6 +40,7 @@ export type DoctorAppointment = {
   id: string
   conducted: boolean
   cancelled: boolean
+  description?: string
   slot: {
     id: string
     date: string
@@ -58,4 +59,8 @@ export type DoctorAppointmentsParams = {
   conducted: boolean
   sort: string
   limit?: number
+}
+
+export type AppointmentDetail = Appointment & {
+  patient: DoctorAppointment['patient']
 }

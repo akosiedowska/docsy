@@ -5,7 +5,7 @@ import { getAppointmentById } from '../api'
 
 export const useAppointment = (id: string) => {
   return useQuery({
-    queryKey: appointmentsKeys.appointment,
+    queryKey: appointmentsKeys.appointment(id),
     queryFn: () => getAppointmentById(id),
     enabled: !!id,
   })

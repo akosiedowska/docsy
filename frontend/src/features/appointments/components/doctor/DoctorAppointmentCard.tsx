@@ -1,10 +1,12 @@
-import { Box, Button, Card, Flex, Group, Text } from '@mantine/core'
+import { Box, Card, Flex, Group, Text } from '@mantine/core'
 import { Pencil } from 'lucide-react'
 
 import type { DoctorAppointment } from '../../types'
 
 import classes from './DoctorAppointmentCard.module.css'
 import { palette } from '../../../../styles/colors'
+import { paths } from '../../../../app/paths'
+import ButtonLink from '../../../../components/ui/ButtonLink'
 
 type DoctorAppointmentCardProps = {
   appointment: DoctorAppointment
@@ -44,9 +46,14 @@ const DoctorAppointmentCard = ({ appointment, variant }: DoctorAppointmentCardPr
             </Text>
           </Box>
           <Box>
-            <Button leftSection={<Pencil size={16} />} variant='light'>
+            <ButtonLink
+              leftSection={<Pencil size={16} />}
+              variant='light'
+              to={paths.APPOINTMENT}
+              params={{ appointmentId: appointment.id }}
+            >
               Edit
-            </Button>
+            </ButtonLink>
           </Box>
         </Group>
       </Card.Section>

@@ -111,7 +111,7 @@ const getAppointmentsByUserId = async (userId: string) => {
   if (!patient) throw new NotFoundError('Patient not found')
 
   return prisma.appointment.findMany({
-    where: { patientId: patient.id },
+    where: { patientId: patient.id, cancelled: false },
     orderBy: { slot: { date: 'asc' } },
     select: {
       id: true,

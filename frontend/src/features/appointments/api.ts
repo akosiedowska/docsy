@@ -1,6 +1,7 @@
 import { apiClient } from '../../api/client'
 import type {
   Appointment,
+  AppointmentDetail,
   AvailableSlot,
   CreateAppointmentBody,
   DoctorAppointment,
@@ -37,4 +38,4 @@ export const getDoctorAppointments = (params: DoctorAppointmentsParams) =>
   apiClient.get<DoctorAppointment[]>('/appointments/doctor', { params }).then((r) => r.data)
 
 export const getAppointmentById = (id: string) =>
-  apiClient.get<Appointment>(`/appointments/${id}`).then((r) => r.data)
+  apiClient.get<AppointmentDetail>(`/appointments/${id}`).then((r) => r.data)
