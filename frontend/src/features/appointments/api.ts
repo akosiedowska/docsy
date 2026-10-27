@@ -6,6 +6,7 @@ import type {
   CreateAppointmentBody,
   DoctorAppointment,
   DoctorAppointmentsParams,
+  UpdateAppointmentBody,
 } from './types'
 
 export const getSpecializations = () => {
@@ -39,3 +40,7 @@ export const getDoctorAppointments = (params: DoctorAppointmentsParams) =>
 
 export const getAppointmentById = (id: string) =>
   apiClient.get<AppointmentDetail>(`/appointments/${id}`).then((r) => r.data)
+
+export const updateAppointmentById = (id: string, payload: UpdateAppointmentBody) => {
+  return apiClient.patch<AppointmentDetail>(`/appointments/${id}`, payload).then((r) => r.data)
+}

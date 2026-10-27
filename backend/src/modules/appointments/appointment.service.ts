@@ -9,6 +9,7 @@ const appointmentDetailSelect = {
   conducted: true,
   cancelled: true,
   description: true,
+  recommendations: true,
   slot: {
     select: {
       id: true,
@@ -182,6 +183,7 @@ const updateAppointmentById = async (id: string, appointmentData: UpdateAppointm
     data: {
       conducted: appointmentData.conducted,
       description: appointmentData.description,
+      recommendations: appointmentData.recommendations,
     },
     select: appointmentDetailSelect,
   })

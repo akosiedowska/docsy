@@ -11,6 +11,7 @@ export const appointmentResponseSchema = z.object({
   conducted: z.boolean(),
   cancelled: z.boolean(),
   description: z.string().nullable(),
+  recommendations: z.string().nullable(),
   slot: z.object({
     id: z.uuid(),
     date: z.date(),
@@ -65,6 +66,7 @@ export const doctorAppointmentsResponseSchema = z.array(doctorAppointmentRespons
 export const updateAppointmentBodySchema = z.object({
   description: z.string().nullable().optional(),
   conducted: z.boolean().optional(),
+  recommendations: z.string().nullable().optional(),
 })
 
 export type UpdateAppointmentBody = z.infer<typeof updateAppointmentBodySchema>

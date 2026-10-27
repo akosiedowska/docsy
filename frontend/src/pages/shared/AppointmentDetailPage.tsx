@@ -18,8 +18,8 @@ const AppointmentDetailPage = () => {
 
   return (
     <div>
-      <div>AppointmentDetailPage</div>
-      <div>{appointmentId}</div>
+      {/* <div>AppointmentDetailPage</div>
+      <div>{appointmentId}</div> */}
       <AppointmentDetails appointment={appointment} />
     </div>
   )
