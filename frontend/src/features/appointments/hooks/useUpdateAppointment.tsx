@@ -15,10 +15,9 @@ export const useUpdateAppointment = () => {
 
   return useMutation<AppointmentDetail, AxiosError<ApiErrorResponse>, UpdateAppointmentVariables>({
     mutationFn: ({ id, payload }) => updateAppointmentById(id, payload),
-    onSuccess: (_data, { id }) =>
-      Promise.all([
-        queryClient.invalidateQueries({ queryKey: appointmentsKeys.appointment(id) }),
-        queryClient.invalidateQueries({ queryKey: appointmentsKeys.appointments }),
-      ]),
+    onSuccess: async (_data, { id }) => {
+      queryClient.invalidateQueries({ queryKey: appointmentsKeys.appointments })
+      await queryClient.invalidateQueries({ queryKey: appointmentsKeys.appointment(id) })
+    },
   })
 }
