@@ -119,6 +119,7 @@ const getAppointmentsByUserId = async (userId: string) => {
       conducted: true,
       cancelled: true,
       description: true,
+      recommendations: true,
       slot: {
         select: {
           id: true,
