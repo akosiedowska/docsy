@@ -46,6 +46,8 @@ const bookAppointment = async (slotId: string, userId: string) => {
         id: true,
         conducted: true,
         cancelled: true,
+        description: true,
+        recommendations: true,
         slot: {
           select: {
             id: true,
@@ -88,6 +90,7 @@ const cancelAppointment = async (id: string) => {
         conducted: true,
         cancelled: true,
         description: true,
+        recommendations: true,
         slot: {
           select: {
             id: true,
