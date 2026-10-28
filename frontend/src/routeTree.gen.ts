@@ -15,6 +15,7 @@ import { Route as RegisterRouteImport } from './routes/register'
 import { Route as AuthPatientRouteImport } from './routes/_auth/_patient'
 import { Route as AuthProfileRouteImport } from './routes/_auth/profile'
 import { Route as AuthPatientReservationRouteImport } from './routes/_auth/_patient/reservation'
+import { Route as AuthAppointmentsAppointmentIdRouteImport } from './routes/_auth/appointments/$appointmentId'
 import { Route as AuthDashboardIndexRouteImport } from './routes/_auth/dashboard/index'
 import { Route as AuthDashboardAdminRouteImport } from './routes/_auth/dashboard/_admin'
 import { Route as AuthDashboardDoctorRouteImport } from './routes/_auth/dashboard/_doctor'
@@ -49,6 +50,12 @@ const AuthPatientReservationRoute = AuthPatientReservationRouteImport.update({
   path: '/reservation',
   getParentRoute: () => AuthPatientRoute,
 } as any)
+const AuthAppointmentsAppointmentIdRoute =
+  AuthAppointmentsAppointmentIdRouteImport.update({
+    id: '/appointments/$appointmentId',
+    path: '/appointments/$appointmentId',
+    getParentRoute: () => AuthRoute,
+  } as any)
 const AuthDashboardIndexRoute = AuthDashboardIndexRouteImport.update({
   id: '/dashboard/',
   path: '/dashboard/',
@@ -82,6 +89,7 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterRoute
   '/profile': typeof AuthProfileRoute
   '/reservation': typeof AuthPatientReservationRoute
+  '/appointments/$appointmentId': typeof AuthAppointmentsAppointmentIdRoute
   '/dashboard': typeof AuthDashboardDoctorRouteWithChildren
   '/dashboard/': typeof AuthDashboardIndexRoute
   '/dashboard/doctors': typeof AuthDashboardAdminDoctorsRoute
@@ -92,6 +100,7 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterRoute
   '/profile': typeof AuthProfileRoute
   '/reservation': typeof AuthPatientReservationRoute
+  '/appointments/$appointmentId': typeof AuthAppointmentsAppointmentIdRoute
   '/dashboard': typeof AuthDashboardIndexRoute
   '/dashboard/doctors': typeof AuthDashboardAdminDoctorsRoute
   '/dashboard/schedule': typeof AuthDashboardDoctorScheduleRoute
@@ -104,6 +113,7 @@ export interface FileRoutesById {
   '/_auth/_patient': typeof AuthPatientRouteWithChildren
   '/_auth/profile': typeof AuthProfileRoute
   '/_auth/_patient/reservation': typeof AuthPatientReservationRoute
+  '/_auth/appointments/$appointmentId': typeof AuthAppointmentsAppointmentIdRoute
   '/_auth/dashboard/_admin': typeof AuthDashboardAdminRouteWithChildren
   '/_auth/dashboard/_doctor': typeof AuthDashboardDoctorRouteWithChildren
   '/_auth/dashboard/': typeof AuthDashboardIndexRoute
@@ -117,6 +127,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/profile'
     | '/reservation'
+    | '/appointments/$appointmentId'
     | '/dashboard'
     | '/dashboard/'
     | '/dashboard/doctors'
@@ -127,6 +138,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/profile'
     | '/reservation'
+    | '/appointments/$appointmentId'
     | '/dashboard'
     | '/dashboard/doctors'
     | '/dashboard/schedule'
@@ -138,6 +150,7 @@ export interface FileRouteTypes {
     | '/_auth/_patient'
     | '/_auth/profile'
     | '/_auth/_patient/reservation'
+    | '/_auth/appointments/$appointmentId'
     | '/_auth/dashboard/_admin'
     | '/_auth/dashboard/_doctor'
     | '/_auth/dashboard/'
@@ -194,6 +207,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/reservation'
       preLoaderRoute: typeof AuthPatientReservationRouteImport
       parentRoute: typeof AuthPatientRoute
+    }
+    '/_auth/appointments/$appointmentId': {
+      id: '/_auth/appointments/$appointmentId'
+      path: '/appointments/$appointmentId'
+      fullPath: '/appointments/$appointmentId'
+      preLoaderRoute: typeof AuthAppointmentsAppointmentIdRouteImport
+      parentRoute: typeof AuthRoute
     }
     '/_auth/dashboard/': {
       id: '/_auth/dashboard/'
@@ -270,6 +290,7 @@ const AuthDashboardDoctorRouteWithChildren =
 interface AuthRouteChildren {
   AuthPatientRoute: typeof AuthPatientRouteWithChildren
   AuthProfileRoute: typeof AuthProfileRoute
+  AuthAppointmentsAppointmentIdRoute: typeof AuthAppointmentsAppointmentIdRoute
   AuthDashboardAdminRoute: typeof AuthDashboardAdminRouteWithChildren
   AuthDashboardDoctorRoute: typeof AuthDashboardDoctorRouteWithChildren
   AuthDashboardIndexRoute: typeof AuthDashboardIndexRoute
@@ -278,6 +299,7 @@ interface AuthRouteChildren {
 const AuthRouteChildren: AuthRouteChildren = {
   AuthPatientRoute: AuthPatientRouteWithChildren,
   AuthProfileRoute: AuthProfileRoute,
+  AuthAppointmentsAppointmentIdRoute: AuthAppointmentsAppointmentIdRoute,
   AuthDashboardAdminRoute: AuthDashboardAdminRouteWithChildren,
   AuthDashboardDoctorRoute: AuthDashboardDoctorRouteWithChildren,
   AuthDashboardIndexRoute: AuthDashboardIndexRoute,

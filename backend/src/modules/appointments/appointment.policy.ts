@@ -1,10 +1,15 @@
 import { prisma } from '../../db/prisma'
-import type { Appointment, Patient } from '../../../generated/prisma/client'
+import type { Appointment, Doctor, Patient, Slot } from '../../../generated/prisma/client'
 import type { AuthorizePolicy } from '../../middleware/authorize'
 import type { CurrentUser } from '../../types/current-user'
 import type { AppointmentIdParams } from './appointment.schemas'
 
 type AppointmentWithPatient = Appointment & { patient: Patient }
+
+type AppointmentWithParticipants = Appointment & {
+  patient: Patient
+  slot: Slot & { doctor: Doctor }
+}
 
 const canCancel = (user: CurrentUser, appointment: AppointmentWithPatient) =>
   user.role === 'ADMIN' || appointment.patient.userId === user.id
@@ -17,4 +22,38 @@ export const cancelAppointmentPolicy: AuthorizePolicy<AppointmentWithPatient> = 
   isAllowed: canCancel,
   notFoundMessage: 'Appointment not found',
   forbiddenMessage: 'You can only cancel your own appointments',
+}
+
+const canView = (user: CurrentUser, appointment: AppointmentWithParticipants) =>
+  user.role === 'ADMIN' ||
+  appointment.patient.userId === user.id ||
+  appointment.slot.doctor.userId === user.id
+
+export const viewAppointmentPolicy: AuthorizePolicy<AppointmentWithParticipants> = {
+  getResource: (request) => {
+    const { id } = request.params as AppointmentIdParams
+    return prisma.appointment.findUnique({
+      where: { id },
+      include: { patient: true, slot: { include: { doctor: true } } },
+    })
+  },
+  isAllowed: canView,
+  notFoundMessage: 'Appointment not found',
+  forbiddenMessage: 'You can only view your own appointments',
+}
+
+const canUpdate = (user: CurrentUser, appointment: AppointmentWithParticipants) =>
+  user.role === 'ADMIN' || appointment.slot.doctor.userId === user.id
+
+export const updateAppointmentPolicy: AuthorizePolicy<AppointmentWithParticipants> = {
+  getResource: (request) => {
+    const { id } = request.params as AppointmentIdParams
+    return prisma.appointment.findUnique({
+      where: { id },
+      include: { patient: true, slot: { include: { doctor: true } } },
+    })
+  },
+  isAllowed: canUpdate,
+  notFoundMessage: 'Appointment not found',
+  forbiddenMessage: 'You can only edit your own appointments',
 }

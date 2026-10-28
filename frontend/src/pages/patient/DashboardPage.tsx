@@ -1,6 +1,6 @@
 import { Stack } from '@mantine/core'
 import AppointmentList from '../../features/appointments/components/patient/AppointmentList'
-import DashboardGreeting from '../../features/appointments/components/patient/DashboardGreeting'
+import DashboardGreeting from '../../features/dashboard/components/DashboardGreeting'
 
 const DashboardPage = () => {
   return (

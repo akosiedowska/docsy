@@ -21,6 +21,8 @@ export type Appointment = {
   id: string
   conducted: boolean
   cancelled: boolean
+  description: string | null
+  recommendations: string | null
   slot: {
     id: string
     date: string
@@ -34,4 +36,40 @@ export type Appointment = {
       }
     }
   }
+}
+
+export type DoctorAppointment = {
+  id: string
+  conducted: boolean
+  cancelled: boolean
+  description?: string
+  recommendations?: string
+  slot: {
+    id: string
+    date: string
+    address: string
+  }
+  patient: {
+    id: string
+    user: {
+      firstName: string
+      lastName: string
+    }
+  }
+}
+
+export type DoctorAppointmentsParams = {
+  conducted: boolean
+  sort: string
+  limit?: number
+}
+
+export type AppointmentDetail = Appointment & {
+  patient: DoctorAppointment['patient']
+}
+
+export type UpdateAppointmentBody = {
+  conducted: boolean
+  description: string
+  recommendations: string
 }

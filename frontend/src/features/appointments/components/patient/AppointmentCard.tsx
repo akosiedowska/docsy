@@ -1,10 +1,9 @@
-import { useState } from 'react'
-import { Box, Button, Card, Group, Stack, Text } from '@mantine/core'
-import { CircleAlert } from 'lucide-react'
+import { Box, Card, Group, Stack, Text } from '@mantine/core'
 
 import type { Appointment } from '../../types'
-import { useCancelAppointment } from '../../hooks/useCancelAppoinment'
-import AlertDialog from '../../../../components/ui/AlertDialog'
+import { paths } from '../../../../app/paths'
+import ButtonLink from '../../../../components/ui/ButtonLink'
+import AppointmentActionButtons from '../shared/AppointmentActionButtons'
 
 import classes from './AppointmentCard.module.css'
 
@@ -14,11 +13,6 @@ type AppointmentCardProps = {
 }
 
 export const AppointmentCard = ({ appointment, variant }: AppointmentCardProps) => {
-  const { mutate: cancelAppointment } = useCancelAppointment()
-  const [openAlertDialog, setOpenDialog] = useState(false)
-
-  const handleCloseAlertDialog = () => setOpenDialog(false)
-
   const date = new Date(appointment.slot.date)
 
   return (
@@ -44,7 +38,7 @@ export const AppointmentCard = ({ appointment, variant }: AppointmentCardProps) 
               </Text>
             </Stack>
 
-            <Box className={`${classes.dateBox} ${classes[`${variant}Date`]}`}>
+            <Box className={`${classes.dateBox} ${classes[`${variant}Box`]}`}>
               <Box className={classes.date}>
                 <Text className={classes.day}>{date.getDate()}</Text>
                 <Text className={classes.month}>
@@ -59,19 +53,21 @@ export const AppointmentCard = ({ appointment, variant }: AppointmentCardProps) 
               </Text>
             </Box>
           </Group>
-
-          {appointment.conducted !== true && (
+          {appointment.conducted !== true && <AppointmentActionButtons appointment={appointment} />}
+          {appointment.conducted == true && (
             <Group justify='end'>
-              <Button onClick={() => setOpenDialog(true)} variant='default'>
-                Cancel
-              </Button>
-              {/* to be implemented */}
-              {/* <Button>Reschedule</Button> */}
+              <ButtonLink
+                variant='default'
+                to={paths.APPOINTMENT}
+                params={{ appointmentId: appointment.id }}
+              >
+                Details
+              </ButtonLink>
             </Group>
           )}
         </Stack>
       </Card>
-      <AlertDialog
+      {/* <AlertDialog
         content='Are you sure you want to cancel the visit?'
         open={openAlertDialog}
         handleClose={handleCloseAlertDialog}
@@ -79,7 +75,7 @@ export const AppointmentCard = ({ appointment, variant }: AppointmentCardProps) 
         closeBtnText='No'
         action={() => cancelAppointment(appointment.id)}
         icon={<CircleAlert />}
-      />
+      /> */}
     </>
   )
 }

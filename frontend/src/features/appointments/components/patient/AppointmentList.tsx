@@ -4,6 +4,8 @@ import { AppointmentCard } from './AppointmentCard'
 import { useAppointments } from '../../hooks/useAppointments'
 import type { Appointment } from '../../types'
 import { LoadingSpinner } from '../../../../components/ui/LoadingSpinner'
+import { getApiErrorMessage } from '../../../../api/getApiErrorMesage'
+import { palette } from '../../../../styles/colors'
 
 const AppointmentList = () => {
   const { isPending, isError, data: appointments, error } = useAppointments()
@@ -13,7 +15,7 @@ const AppointmentList = () => {
   }
 
   if (isError) {
-    return <Text color='error'>{error.message}</Text>
+    return <Text c={palette.alert}>{getApiErrorMessage(error)}</Text>
   }
 
   const nextAppointments = appointments.filter(
@@ -22,7 +24,7 @@ const AppointmentList = () => {
   const previousAppointments = appointments.filter((a) => a.conducted === true)
 
   return (
-    <Stack gap='40px' align='center' w='100%' maw={500} mx='auto'>
+    <Stack gap='40px' align='center' w='100%' maw={600} mx='auto'>
       <Stack gap='16px' w='100%'>
         <Text fw='700' size='lg'>
           Upcoming visits

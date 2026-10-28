@@ -1,5 +1,33 @@
 import { prisma } from '../../db/prisma'
 import { ConflictError, NotFoundError } from '../../errors/http-error'
+import { DoctorAppointmentsQuery, UpdateAppointmentBody } from './appointment.schemas'
+
+import type { Prisma } from '../../../generated/prisma/client'
+
+const appointmentDetailSelect = {
+  id: true,
+  conducted: true,
+  cancelled: true,
+  description: true,
+  recommendations: true,
+  slot: {
+    select: {
+      id: true,
+      date: true,
+      address: true,
+      doctor: {
+        select: {
+          id: true,
+          specialization: true,
+          user: { select: { firstName: true, lastName: true } },
+        },
+      },
+    },
+  },
+  patient: {
+    select: { id: true, user: { select: { firstName: true, lastName: true } } },
+  },
+} satisfies Prisma.AppointmentSelect
 
 const bookAppointment = async (slotId: string, userId: string) => {
   return prisma.$transaction(async (tx) => {
@@ -18,6 +46,8 @@ const bookAppointment = async (slotId: string, userId: string) => {
         id: true,
         conducted: true,
         cancelled: true,
+        description: true,
+        recommendations: true,
         slot: {
           select: {
             id: true,
@@ -59,6 +89,8 @@ const cancelAppointment = async (id: string) => {
         id: true,
         conducted: true,
         cancelled: true,
+        description: true,
+        recommendations: true,
         slot: {
           select: {
             id: true,
@@ -83,12 +115,14 @@ const getAppointmentsByUserId = async (userId: string) => {
   if (!patient) throw new NotFoundError('Patient not found')
 
   return prisma.appointment.findMany({
-    where: { patientId: patient.id },
+    where: { patientId: patient.id, cancelled: false },
     orderBy: { slot: { date: 'asc' } },
     select: {
       id: true,
       conducted: true,
       cancelled: true,
+      description: true,
+      recommendations: true,
       slot: {
         select: {
           id: true,
@@ -107,8 +141,63 @@ const getAppointmentsByUserId = async (userId: string) => {
   })
 }
 
+const getAppointmentsByDoctorsUserId = async (
+  userId: string,
+  { conducted, sort, limit }: DoctorAppointmentsQuery,
+) => {
+  const doctor = await prisma.doctor.findUnique({ where: { userId } })
+  if (!doctor) throw new NotFoundError('Doctor not found')
+
+  return prisma.appointment.findMany({
+    where: { slot: { doctorId: doctor.id }, cancelled: false, conducted },
+    orderBy: { slot: { date: sort } },
+    take: limit,
+    select: {
+      id: true,
+      conducted: true,
+      cancelled: true,
+      description: true,
+      slot: { select: { id: true, date: true, address: true } },
+      patient: {
+        select: { id: true, user: { select: { firstName: true, lastName: true } } },
+      },
+    },
+  })
+}
+
+export const getAppointmentById = async (id: string) => {
+  const appointment = await prisma.appointment.findUnique({
+    where: { id },
+    select: appointmentDetailSelect,
+  })
+  if (!appointment) throw new NotFoundError('Appointment not found')
+
+  return appointment
+}
+
+const updateAppointmentById = async (id: string, appointmentData: UpdateAppointmentBody) => {
+  const appointment = await prisma.appointment.findUnique({ where: { id } })
+  if (!appointment) {
+    throw new NotFoundError('Appointment not found')
+  }
+  if (appointment.cancelled) throw new ConflictError('Appointment is cancelled')
+
+  return await prisma.appointment.update({
+    where: { id },
+    data: {
+      conducted: appointmentData.conducted,
+      description: appointmentData.description,
+      recommendations: appointmentData.recommendations,
+    },
+    select: appointmentDetailSelect,
+  })
+}
+
 export const appointmentService = {
   bookAppointment,
   cancelAppointment,
   getAppointmentsByUserId,
+  getAppointmentsByDoctorsUserId,
+  getAppointmentById,
+  updateAppointmentById,
 }

@@ -1,0 +1,22 @@
+.card {
+  border-radius: 14px;
+  border-left-width: 4px;
+}
+
+.upcoming {
+  border-left-color: var(--mantine-color-lime-5);
+}
+
+.recent {
+  border-left-color: var(--mantine-color-violet-6);
+}
+
+.upcomingBox {
+  background-color: var(--mantine-color-lime-1);
+  color: var(--mantine-color-lime-9);
+}
+
+.recentBox {
+  background-color: var(--mantine-color-violet-1);
+  color: var(--mantine-color-violet-6);
+}

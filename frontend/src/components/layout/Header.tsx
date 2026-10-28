@@ -1,4 +1,15 @@
-import { AppShell, Anchor, Avatar, Button, Menu, Text, Box, Flex, Group } from '@mantine/core'
+import {
+  AppShell,
+  Anchor,
+  Avatar,
+  Button,
+  Menu,
+  Text,
+  Box,
+  Flex,
+  Group,
+  UnstyledButton,
+} from '@mantine/core'
 import { HousePlus, CircleUserRound, LogOut, Plus, ClipboardList } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
 
@@ -43,18 +54,25 @@ const Header = () => {
         {isAuthenticated ? (
           <Group align='center' gap='xl'>
             {user?.role === 'PATIENT' ? (
-              <Anchor component={Link} to={paths.RESERVATION} visibleFrom='sm'>
-                <Button leftSection={<Plus />}>Book</Button>
-              </Anchor>
+              <Button
+                leftSection={<Plus />}
+                component={Link}
+                to={paths.RESERVATION}
+                visibleFrom='sm'
+              >
+                Book
+              </Button>
             ) : null}
             <Menu shadow='md' width={220} position='bottom-end'>
               <Menu.Target>
-                <Avatar
-                  className={classes.avatar}
-                  classNames={{ placeholder: classes.placeholder }}
-                >
-                  {getInitials(user?.firstName, user?.lastName)}
-                </Avatar>
+                <UnstyledButton aria-label='Account menu'>
+                  <Avatar
+                    className={classes.avatar}
+                    classNames={{ placeholder: classes.placeholder }}
+                  >
+                    {getInitials(user?.firstName, user?.lastName)}
+                  </Avatar>
+                </UnstyledButton>
               </Menu.Target>
 
               <Menu.Dropdown>
