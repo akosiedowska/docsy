@@ -18,17 +18,15 @@ const VisitSummaryCard = ({ appointment }: VisitSummaryCardProps) => {
   const { mutate, isPending } = useUpdateAppointment()
 
   const handleSave = (values: AppointmentFormValues) => {
-    console.log('saving')
     mutate({ id: appointment.id, payload: values }, { onSuccess: () => setIsEditing(false) })
   }
 
   const handleEdit = () => {
     setIsEditing(true)
-    console.log('editing')
   }
 
   return (
-    <Card w='100%' padding='18' withBorder>
+    <Card w='100%' padding='22 24' withBorder>
       <Stack gap={12}>
         <Group justify='space-between'>
           <Text tt='uppercase' c='violet.7' fw={600} mb={10}>
@@ -60,21 +58,25 @@ const VisitSummaryCard = ({ appointment }: VisitSummaryCardProps) => {
           <VisitSummaryForm appointment={appointment} handleSave={handleSave} formId={FORM_ID} />
         ) : (
           <Stack gap={20}>
-            <Checkbox checked={appointment.conducted} label='Conducted' />
-            <Stack gap={10}>
-              <Text c={palette.grayText} size='12px'>
-                Description
-              </Text>
-              <Box bdrs={10} p='12 16' bd='1px solid gray.3' mih={50}>
-                {appointment.description ? (
-                  <Text>{appointment.description}</Text>
-                ) : (
-                  <Text c={palette.grayText} fs='italic'>
-                    No description provided
+            {user?.role !== 'PATIENT' ? (
+              <>
+                <Checkbox checked={appointment.conducted} label='Conducted' />
+                <Stack gap={10}>
+                  <Text c={palette.grayText} size='12px'>
+                    Description
                   </Text>
-                )}
-              </Box>
-            </Stack>
+                  <Box bdrs={10} p='12 16' bd='1px solid gray.3' mih={50}>
+                    {appointment.description ? (
+                      <Text>{appointment.description}</Text>
+                    ) : (
+                      <Text c={palette.grayText} fs='italic'>
+                        No description provided
+                      </Text>
+                    )}
+                  </Box>
+                </Stack>
+              </>
+            ) : null}
             <Stack gap={10}>
               <Text c={palette.grayText} size='12px'>
                 Recommendations

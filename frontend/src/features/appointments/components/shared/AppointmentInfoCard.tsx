@@ -14,7 +14,7 @@ const AppointmentInfoCard = ({ appointment }: AppointmentInfoCardProps) => {
   return (
     <Card
       w='100%'
-      padding='18'
+      padding='22 24'
       withBorder
       lh={1}
       className={`${classes.card} ${classes[appointment.conducted ? 'recent' : 'upcoming']}`}

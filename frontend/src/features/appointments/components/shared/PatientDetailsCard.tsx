@@ -7,7 +7,7 @@ type PatientDetailsProps = { appointment: AppointmentDetail }
 
 const PatientDetailsCard = ({ appointment }: PatientDetailsProps) => {
   return (
-    <Card w='100%' padding='18' withBorder>
+    <Card w='100%' padding='22 24' withBorder>
       <Text tt='uppercase' c='violet.7' fw={600} mb={10}>
         Patient
       </Text>

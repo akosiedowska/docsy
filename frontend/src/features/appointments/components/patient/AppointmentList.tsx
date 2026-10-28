@@ -24,7 +24,7 @@ const AppointmentList = () => {
   const previousAppointments = appointments.filter((a) => a.conducted === true)
 
   return (
-    <Stack gap='40px' align='center' w='100%' maw={500} mx='auto'>
+    <Stack gap='40px' align='center' w='100%' maw={600} mx='auto'>
       <Stack gap='16px' w='100%'>
         <Text fw='700' size='lg'>
           Upcoming visits
