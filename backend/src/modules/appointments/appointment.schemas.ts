@@ -40,28 +40,21 @@ export const appointmentIdParamsSchema = z.object({ id: z.uuid() })
 
 export type AppointmentIdParams = z.infer<typeof appointmentIdParamsSchema>
 
-export const appointmentsResponseSchema = z.array(appointmentResponseSchema)
-
-export type AppointmentsResponse = z.infer<typeof appointmentsResponseSchema>
-
-export const doctorAppointmentsQuerySchema = z.object({
-  conducted: z.stringbool().default(false),
-  sort: z.enum(['asc', 'desc']).default('asc'),
-  limit: z.coerce.number().int().positive().max(100).optional(),
+export const appointmentsQuerySchema = z.object({
+  status: z.enum(['upcoming', 'conducted', 'cancelled']).optional(),
+  search: z.string().trim().min(1).max(100).optional(),
+  sortBy: z.enum(['date', 'patient', 'doctor']).default('date'),
+  sortOrder: z.enum(['asc', 'desc']).default('asc'),
+  limit: z.coerce.number().int().positive().max(100).default(20),
+  offset: z.coerce.number().int().min(0).default(0),
 })
-export type DoctorAppointmentsQuery = z.infer<typeof doctorAppointmentsQuerySchema>
+export type AppointmentsQuery = z.infer<typeof appointmentsQuerySchema>
+export type AppointmentStatus = NonNullable<AppointmentsQuery['status']>
 
-export const doctorAppointmentResponseSchema = z.object({
-  id: z.uuid(),
-  conducted: z.boolean(),
-  cancelled: z.boolean(),
-  slot: z.object({ id: z.uuid(), date: z.date(), address: z.string() }),
-  patient: z.object({
-    id: z.uuid(),
-    user: z.object({ firstName: z.string(), lastName: z.string() }),
-  }),
+export const appointmentsResponseSchema = z.object({
+  items: z.array(appointmentDetailResponseSchema),
+  total: z.number().int().nonnegative(),
 })
-export const doctorAppointmentsResponseSchema = z.array(doctorAppointmentResponseSchema)
 
 export const updateAppointmentBodySchema = z.object({
   description: z.string().nullable().optional(),

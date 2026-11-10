@@ -1,6 +1,12 @@
 import { prisma } from '../../db/prisma'
-import { ConflictError, NotFoundError } from '../../errors/http-error'
-import { DoctorAppointmentsQuery, UpdateAppointmentBody } from './appointment.schemas'
+import { Role } from '../../../generated/prisma/enums'
+import { ConflictError, ForbiddenError, NotFoundError } from '../../errors/http-error'
+import type { CurrentUser } from '../../types/current-user'
+import type {
+  AppointmentsQuery,
+  AppointmentStatus,
+  UpdateAppointmentBody,
+} from './appointment.schemas'
 
 import type { Prisma } from '../../../generated/prisma/client'
 
@@ -110,59 +116,108 @@ const cancelAppointment = async (id: string) => {
   })
 }
 
-const getAppointmentsByUserId = async (userId: string) => {
-  const patient = await prisma.patient.findUnique({ where: { userId } })
-  if (!patient) throw new NotFoundError('Patient not found')
-
-  return prisma.appointment.findMany({
-    where: { patientId: patient.id, cancelled: false },
-    orderBy: { slot: { date: 'asc' } },
-    select: {
-      id: true,
-      conducted: true,
-      cancelled: true,
-      description: true,
-      recommendations: true,
-      slot: {
-        select: {
-          id: true,
-          date: true,
-          address: true,
-          doctor: {
-            select: {
-              id: true,
-              specialization: true,
-              user: { select: { firstName: true, lastName: true } },
-            },
-          },
-        },
-      },
-    },
-  })
+const statusFilters: Record<AppointmentStatus, Prisma.AppointmentWhereInput> = {
+  upcoming: { conducted: false, cancelled: false },
+  conducted: { conducted: true, cancelled: false },
+  cancelled: { cancelled: true },
 }
 
-const getAppointmentsByDoctorsUserId = async (
-  userId: string,
-  { conducted, sort, limit }: DoctorAppointmentsQuery,
-) => {
-  const doctor = await prisma.doctor.findUnique({ where: { userId } })
-  if (!doctor) throw new NotFoundError('Doctor not found')
+const buildScopeFilter = ({ id, role }: CurrentUser): Prisma.AppointmentWhereInput => {
+  switch (role) {
+    case Role.PATIENT:
+      return { patient: { userId: id } }
+    case Role.DOCTOR:
+      return { slot: { doctor: { userId: id } } }
+    case Role.ADMIN:
+      return {}
+  }
+}
 
-  return prisma.appointment.findMany({
-    where: { slot: { doctorId: doctor.id }, cancelled: false, conducted },
-    orderBy: { slot: { date: sort } },
-    take: limit,
-    select: {
-      id: true,
-      conducted: true,
-      cancelled: true,
-      description: true,
-      slot: { select: { id: true, date: true, address: true } },
-      patient: {
-        select: { id: true, user: { select: { firstName: true, lastName: true } } },
-      },
-    },
+const buildStatusFilter = (
+  role: Role,
+  status?: AppointmentStatus,
+): Prisma.AppointmentWhereInput => {
+  if (status === 'cancelled' && role !== Role.ADMIN) {
+    throw new ForbiddenError('Only admins can view cancelled appointments')
+  }
+  if (status) return statusFilters[status]
+  return role === Role.ADMIN ? {} : { cancelled: false }
+}
+
+const nameFilter = (word: string): Prisma.UserWhereInput => ({
+  OR: [
+    { firstName: { contains: word, mode: 'insensitive' } },
+    { lastName: { contains: word, mode: 'insensitive' } },
+  ],
+})
+
+const buildSearchFilter = (role: Role, search?: string): Prisma.AppointmentWhereInput => {
+  if (!search) return {}
+
+  const words = search.split(/\s+/)
+  const matchesPatient = (word: string): Prisma.AppointmentWhereInput => ({
+    patient: { user: nameFilter(word) },
   })
+  const matchesDoctor = (word: string): Prisma.AppointmentWhereInput => ({
+    slot: { doctor: { user: nameFilter(word) } },
+  })
+
+  return {
+    AND: words.map((word) => {
+      switch (role) {
+        case Role.PATIENT:
+          return matchesDoctor(word)
+        case Role.DOCTOR:
+          return matchesPatient(word)
+        case Role.ADMIN:
+          return { OR: [matchesPatient(word), matchesDoctor(word)] }
+      }
+    }),
+  }
+}
+
+const orderByMap = {
+  date: (order) => [{ slot: { date: order } }],
+  patient: (order) => [
+    { patient: { user: { lastName: order } } },
+    { patient: { user: { firstName: order } } },
+    { slot: { date: 'asc' } },
+  ],
+  doctor: (order) => [
+    { slot: { doctor: { user: { lastName: order } } } },
+    { slot: { doctor: { user: { firstName: order } } } },
+    { slot: { date: 'asc' } },
+  ],
+} satisfies Record<
+  AppointmentsQuery['sortBy'],
+  (order: Prisma.SortOrder) => Prisma.AppointmentOrderByWithRelationInput[]
+>
+
+const getAppointments = async (
+  user: CurrentUser,
+  { status, search, sortBy, sortOrder, limit, offset }: AppointmentsQuery,
+) => {
+  const where: Prisma.AppointmentWhereInput = {
+    AND: [
+      buildScopeFilter(user),
+      buildStatusFilter(user.role, status),
+      buildSearchFilter(user.role, search),
+    ],
+  }
+
+  const [items, total] = await prisma.$transaction([
+    prisma.appointment.findMany({
+      where,
+      // id as the last key keeps paging stable when sort values tie
+      orderBy: [...orderByMap[sortBy](sortOrder), { id: 'asc' }],
+      take: limit,
+      skip: offset,
+      select: appointmentDetailSelect,
+    }),
+    prisma.appointment.count({ where }),
+  ])
+
+  return { items, total }
 }
 
 export const getAppointmentById = async (id: string) => {
@@ -196,8 +251,7 @@ const updateAppointmentById = async (id: string, appointmentData: UpdateAppointm
 export const appointmentService = {
   bookAppointment,
   cancelAppointment,
-  getAppointmentsByUserId,
-  getAppointmentsByDoctorsUserId,
+  getAppointments,
   getAppointmentById,
   updateAppointmentById,
 }

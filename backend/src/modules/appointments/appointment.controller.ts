@@ -3,8 +3,8 @@ import type { FastifyReply, FastifyRequest } from 'fastify'
 import { appointmentService } from './appointment.service'
 import type {
   AppointmentIdParams,
+  AppointmentsQuery,
   CreateAppointmentBody,
-  DoctorAppointmentsQuery,
   UpdateAppointmentBody,
 } from './appointment.schemas'
 
@@ -25,18 +25,11 @@ const cancelAppointment = async (
   reply.code(200).send(result)
 }
 
-const getPatientAppointments = async (request: FastifyRequest, reply: FastifyReply) => {
-  const { sub: userId } = request.user as { sub: string }
-  const result = await appointmentService.getAppointmentsByUserId(userId)
-  reply.code(200).send(result)
-}
-
-const getDoctorAppointments = async (
-  request: FastifyRequest<{ Querystring: DoctorAppointmentsQuery }>,
+const getAppointments = async (
+  request: FastifyRequest<{ Querystring: AppointmentsQuery }>,
   reply: FastifyReply,
 ) => {
-  const { sub: userId } = request.user as { sub: string }
-  const result = await appointmentService.getAppointmentsByDoctorsUserId(userId, request.query)
+  const result = await appointmentService.getAppointments(request.currentUser, request.query)
   reply.code(200).send(result)
 }
 
@@ -59,8 +52,7 @@ const updateAppointmentById = async (
 export const appointmentController = {
   bookAppointment,
   cancelAppointment,
-  getPatientAppointments,
-  getDoctorAppointments,
+  getAppointments,
   getAppointmentById,
   updateAppointmentById,
 }

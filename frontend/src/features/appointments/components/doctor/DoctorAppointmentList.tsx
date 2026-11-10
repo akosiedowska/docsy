@@ -4,8 +4,8 @@ import { useDoctorAppointments } from '../../hooks/useDoctorAppointments'
 import DoctorAppointmentSection from './DoctorAppointmentsSection'
 
 const DoctorAppointmentList = () => {
-  const upcoming = useDoctorAppointments({ conducted: false, sort: 'asc', limit: 8 })
-  const conducted = useDoctorAppointments({ conducted: true, sort: 'desc', limit: 5 })
+  const upcoming = useDoctorAppointments({ status: 'upcoming', sortOrder: 'asc', limit: 8 })
+  const conducted = useDoctorAppointments({ status: 'conducted', sortOrder: 'desc', limit: 5 })
 
   return (
     <Stack gap='40px' align='center' w='100%' maw={600} mx='auto'>

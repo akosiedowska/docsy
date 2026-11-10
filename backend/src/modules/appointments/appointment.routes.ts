@@ -6,10 +6,9 @@ import {
   appointmentDetailResponseSchema,
   appointmentIdParamsSchema,
   appointmentResponseSchema,
+  appointmentsQuerySchema,
   appointmentsResponseSchema,
   createAppointmentBodySchema,
-  doctorAppointmentsQuerySchema,
-  doctorAppointmentsResponseSchema,
   updateAppointmentBodySchema,
 } from './appointment.schemas'
 import { appointmentController } from './appointment.controller'
@@ -49,24 +48,13 @@ export const appointmentRoutes: FastifyPluginAsyncZod = async (fastify) => {
   fastify.get(
     '/appointments',
     {
-      preHandler: [authenticate, requireRole(Role.PATIENT, Role.ADMIN)],
+      preHandler: authenticate,
       schema: {
+        querystring: appointmentsQuerySchema,
         response: { 200: appointmentsResponseSchema },
       },
     },
-    appointmentController.getPatientAppointments,
-  )
-
-  fastify.get(
-    '/doctor/appointments',
-    {
-      preHandler: [authenticate, requireRole(Role.DOCTOR, Role.ADMIN)],
-      schema: {
-        querystring: doctorAppointmentsQuerySchema,
-        response: { 200: doctorAppointmentsResponseSchema },
-      },
-    },
-    appointmentController.getDoctorAppointments,
+    appointmentController.getAppointments,
   )
 
   fastify.get(
