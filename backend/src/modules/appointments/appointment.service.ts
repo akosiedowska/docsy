@@ -83,7 +83,7 @@ const buildScopeFilter = ({ id, role }: CurrentUser): Prisma.AppointmentWhereInp
   }
 }
 
-// Only admins may see cancelled appointments; for everyone else the param is ignored
+// Only admins may see cancelled appointments
 const buildStatusFilter = (
   role: Role,
   { conducted, cancelled }: Pick<AppointmentsQuery, 'conducted' | 'cancelled'>,

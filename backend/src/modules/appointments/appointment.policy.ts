@@ -24,10 +24,11 @@ export const cancelAppointmentPolicy: AuthorizePolicy<AppointmentWithPatient> = 
   forbiddenMessage: 'You can only cancel your own appointments',
 }
 
+// Cancelled appointments are visible to admins only
 const canView = (user: CurrentUser, appointment: AppointmentWithParticipants) =>
   user.role === 'ADMIN' ||
-  appointment.patient.userId === user.id ||
-  appointment.slot.doctor.userId === user.id
+  (!appointment.cancelled &&
+    (appointment.patient.userId === user.id || appointment.slot.doctor.userId === user.id))
 
 export const viewAppointmentPolicy: AuthorizePolicy<AppointmentWithParticipants> = {
   getResource: (request) => {
@@ -39,7 +40,7 @@ export const viewAppointmentPolicy: AuthorizePolicy<AppointmentWithParticipants>
   },
   isAllowed: canView,
   notFoundMessage: 'Appointment not found',
-  forbiddenMessage: 'You can only view your own appointments',
+  forbiddenMessage: 'You cannot view this appointment',
 }
 
 const canUpdate = (user: CurrentUser, appointment: AppointmentWithParticipants) =>
