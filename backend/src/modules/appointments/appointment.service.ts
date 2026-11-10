@@ -1,12 +1,8 @@
 import { prisma } from '../../db/prisma'
 import { Role } from '../../../generated/prisma/enums'
-import { ConflictError, ForbiddenError, NotFoundError } from '../../errors/http-error'
+import { ConflictError, NotFoundError } from '../../errors/http-error'
 import type { CurrentUser } from '../../types/current-user'
-import type {
-  AppointmentsQuery,
-  AppointmentStatus,
-  UpdateAppointmentBody,
-} from './appointment.schemas'
+import type { AppointmentsQuery, UpdateAppointmentBody } from './appointment.schemas'
 
 import type { Prisma } from '../../../generated/prisma/client'
 
@@ -48,27 +44,7 @@ const bookAppointment = async (slotId: string, userId: string) => {
 
     return tx.appointment.create({
       data: { slotId, patientId: patient.id },
-      select: {
-        id: true,
-        conducted: true,
-        cancelled: true,
-        description: true,
-        recommendations: true,
-        slot: {
-          select: {
-            id: true,
-            date: true,
-            address: true,
-            doctor: {
-              select: {
-                id: true,
-                specialization: true,
-                user: { select: { firstName: true, lastName: true } },
-              },
-            },
-          },
-        },
-      },
+      select: appointmentDetailSelect,
     })
   })
 }
@@ -91,35 +67,9 @@ const cancelAppointment = async (id: string) => {
     return tx.appointment.update({
       where: { id },
       data: { cancelled: true },
-      select: {
-        id: true,
-        conducted: true,
-        cancelled: true,
-        description: true,
-        recommendations: true,
-        slot: {
-          select: {
-            id: true,
-            date: true,
-            address: true,
-            doctor: {
-              select: {
-                id: true,
-                specialization: true,
-                user: { select: { firstName: true, lastName: true } },
-              },
-            },
-          },
-        },
-      },
+      select: appointmentDetailSelect,
     })
   })
-}
-
-const statusFilters: Record<AppointmentStatus, Prisma.AppointmentWhereInput> = {
-  upcoming: { conducted: false, cancelled: false },
-  conducted: { conducted: true, cancelled: false },
-  cancelled: { cancelled: true },
 }
 
 const buildScopeFilter = ({ id, role }: CurrentUser): Prisma.AppointmentWhereInput => {
@@ -133,16 +83,14 @@ const buildScopeFilter = ({ id, role }: CurrentUser): Prisma.AppointmentWhereInp
   }
 }
 
+// Only admins may see cancelled appointments; for everyone else the param is ignored
 const buildStatusFilter = (
   role: Role,
-  status?: AppointmentStatus,
-): Prisma.AppointmentWhereInput => {
-  if (status === 'cancelled' && role !== Role.ADMIN) {
-    throw new ForbiddenError('Only admins can view cancelled appointments')
-  }
-  if (status) return statusFilters[status]
-  return role === Role.ADMIN ? {} : { cancelled: false }
-}
+  { conducted, cancelled }: Pick<AppointmentsQuery, 'conducted' | 'cancelled'>,
+): Prisma.AppointmentWhereInput => ({
+  conducted,
+  cancelled: role === Role.ADMIN ? cancelled : false,
+})
 
 const nameFilter = (word: string): Prisma.UserWhereInput => ({
   OR: [
@@ -152,7 +100,7 @@ const nameFilter = (word: string): Prisma.UserWhereInput => ({
 })
 
 const buildSearchFilter = (role: Role, search?: string): Prisma.AppointmentWhereInput => {
-  if (!search) return {}
+  if (!search || role === Role.PATIENT) return {}
 
   const words = search.split(/\s+/)
   const matchesPatient = (word: string): Prisma.AppointmentWhereInput => ({
@@ -163,16 +111,11 @@ const buildSearchFilter = (role: Role, search?: string): Prisma.AppointmentWhere
   })
 
   return {
-    AND: words.map((word) => {
-      switch (role) {
-        case Role.PATIENT:
-          return matchesDoctor(word)
-        case Role.DOCTOR:
-          return matchesPatient(word)
-        case Role.ADMIN:
-          return { OR: [matchesPatient(word), matchesDoctor(word)] }
-      }
-    }),
+    AND: words.map((word) =>
+      role === Role.DOCTOR
+        ? matchesPatient(word)
+        : { OR: [matchesPatient(word), matchesDoctor(word)] },
+    ),
   }
 }
 
@@ -195,12 +138,12 @@ const orderByMap = {
 
 const getAppointments = async (
   user: CurrentUser,
-  { status, search, sortBy, sortOrder, limit, offset }: AppointmentsQuery,
+  { conducted, cancelled, search, sortBy, sortOrder, limit, offset }: AppointmentsQuery,
 ) => {
   const where: Prisma.AppointmentWhereInput = {
     AND: [
       buildScopeFilter(user),
-      buildStatusFilter(user.role, status),
+      buildStatusFilter(user.role, { conducted, cancelled }),
       buildSearchFilter(user.role, search),
     ],
   }
@@ -208,7 +151,6 @@ const getAppointments = async (
   const [items, total] = await prisma.$transaction([
     prisma.appointment.findMany({
       where,
-      // id as the last key keeps paging stable when sort values tie
       orderBy: [...orderByMap[sortBy](sortOrder), { id: 'asc' }],
       take: limit,
       skip: offset,

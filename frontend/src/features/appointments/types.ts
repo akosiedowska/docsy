@@ -59,7 +59,7 @@ export type DoctorAppointment = {
 }
 
 export type DoctorAppointmentsParams = {
-  status: 'upcoming' | 'conducted'
+  conducted: boolean
   sortOrder: 'asc' | 'desc'
   limit?: number
 }
