@@ -58,7 +58,7 @@ export const appointmentRoutes: FastifyPluginAsyncZod = async (fastify) => {
   )
 
   fastify.get(
-    '/appointments/doctor',
+    '/doctor/appointments',
     {
       preHandler: [authenticate, requireRole(Role.DOCTOR, Role.ADMIN)],
       schema: {
