@@ -11,4 +11,5 @@ export const paths = {
   RESERVATION: '/reservation',
   PROFILE: '/profile',
   APPOINTMENT: '/appointments/$appointmentId',
+  APPOINTMENTS: '/dashboard/appointments',
 } satisfies Record<string, AppPath>
