@@ -1,6 +1,14 @@
-import { tableFeatures, useTable } from '@tanstack/react-table'
+import {
+  columnFilteringFeature,
+  createFilteredRowModel,
+  filterFn_includesString,
+  globalFilteringFeature,
+  tableFeatures,
+  useTable,
+} from '@tanstack/react-table'
 import type { ColumnDef } from '@tanstack/react-table'
-import { Table } from '@mantine/core'
+import { Stack, Table, TextInput } from '@mantine/core'
+import { Search } from 'lucide-react'
 
 import type { AppointmentDetail } from '../../types'
 import { formatShortDate } from '../../../../utils/helpers'
@@ -11,7 +19,14 @@ type AppointmentsTableProps = {
   items: AppointmentDetail[]
 }
 
-const features = tableFeatures({})
+const features = tableFeatures({
+  columnFilteringFeature,
+  globalFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  filterFns: {
+    includesString: filterFn_includesString,
+  },
+})
 
 const columns: Array<ColumnDef<typeof features, AppointmentDetail>> = [
   {
@@ -25,14 +40,15 @@ const columns: Array<ColumnDef<typeof features, AppointmentDetail>> = [
     cell: (info) => <p>{info.getValue<string>()}</p>,
   },
   {
-    accessorFn: (row) => row.slot.date,
+    accessorFn: (row) => formatShortDate(row.slot.date),
     header: 'Date',
-    cell: (info) => <p>{formatShortDate(info.getValue<string>())}</p>,
+    cell: (info) => <p>{info.getValue<string>()}</p>,
   },
   {
-    accessorKey: 'conducted',
-    header: () => 'Conducted',
-    cell: (info) => <p>{info.getValue<boolean>() ? 'Yes' : 'No'}</p>,
+    accessorFn: (row) => (row.conducted ? 'Yes' : 'No'),
+    id: 'conducted',
+    header: 'Conducted',
+    cell: (info) => <p>{info.getValue<string>()}</p>,
   },
   {
     accessorFn: (row) => row.slot.address,
@@ -43,32 +59,42 @@ const columns: Array<ColumnDef<typeof features, AppointmentDetail>> = [
     id: 'edit',
     header: () => 'Edit',
     cell: ({ row }) => (
-      <div>
-        <ButtonLink
-          size='compact-md'
-          px={14}
-          fw={500}
-          to={paths.APPOINTMENT}
-          params={{ appointmentId: row.original.id }}
-          state={{ fromTable: true }}
-        >
-          Edit
-        </ButtonLink>
-      </div>
+      <ButtonLink
+        size='compact-md'
+        px={14}
+        fw={500}
+        to={paths.APPOINTMENT}
+        params={{ appointmentId: row.original.id }}
+        state={{ fromTable: true }}
+      >
+        Edit
+      </ButtonLink>
     ),
   },
 ]
 
 const AppointmentsTable = ({ items }: AppointmentsTableProps) => {
-  const table = useTable({
-    key: 'appointments-table',
-    features,
-    columns,
-    data: items,
-  })
+  const table = useTable(
+    {
+      key: 'appointments-table',
+      features,
+      columns,
+      data: items,
+      globalFilterFn: 'includesString',
+    },
+    (state) => state,
+  )
   return (
-    <>
-      <Table.ScrollContainer minWidth={700} maxHeight='calc(100vh - 175px)'>
+    <Stack>
+      <TextInput
+        aria-label='Search appointments'
+        // value={globalFilter}
+        onChange={(event) => table.setGlobalFilter(event.currentTarget.value)}
+        placeholder='Search all columns...'
+        leftSection={<Search size={16} />}
+        w={{ base: '100%', sm: 360 }}
+      />
+      <Table.ScrollContainer minWidth={700} maxHeight='calc(100vh - 227px)'>
         <Table
           highlightOnHover
           withColumnBorders
@@ -105,7 +131,7 @@ const AppointmentsTable = ({ items }: AppointmentsTableProps) => {
           </Table.Tbody>
         </Table>
       </Table.ScrollContainer>
-    </>
+    </Stack>
   )
 }
 
