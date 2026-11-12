@@ -1,4 +1,4 @@
-import type { DoctorAppointmentsParams } from './types'
+import type { AppointmentsListParams, DoctorAppointmentsParams } from './types'
 
 export const appointmentsKeys = {
   availableSlots: {
@@ -7,6 +7,7 @@ export const appointmentsKeys = {
   },
   specializations: ['specializations'] as const,
   appointments: ['appointments'] as const,
+  appointmentsList: (params: AppointmentsListParams) => ['appointments', 'list', params] as const,
   appointment: (id: string) => ['appointment', id] as const,
   doctorAppointments: (params: DoctorAppointmentsParams) =>
     ['appointments', 'doctor', params] as const,

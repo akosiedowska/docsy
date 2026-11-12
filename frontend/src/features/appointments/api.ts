@@ -2,6 +2,7 @@ import { apiClient } from '../../api/client'
 import type {
   Appointment,
   AppointmentDetail,
+  AppointmentsListParams,
   AppointmentsPage,
   AvailableSlot,
   CreateAppointmentBody,
@@ -29,9 +30,13 @@ export const bookAppointment = (payload: CreateAppointmentBody) => {
 
 export const getAppointments = () => {
   return apiClient
-    .get<AppointmentsPage>('/appointments', { params: { limit: 100 } })
+    .get<AppointmentsPage>('/appointments', { params: { limit: 50 } })
     .then((r) => r.data.items)
 }
+
+export const getAppointmentsPage = (
+  params: AppointmentsListParams & { offset: number; limit: number },
+) => apiClient.get<AppointmentsPage>('/appointments', { params }).then((r) => r.data)
 
 export const cancelAppointment = (id: string) => {
   return apiClient.patch<Appointment>(`/appointments/${id}/cancel`).then((r) => r.data)

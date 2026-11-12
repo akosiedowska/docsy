@@ -121,14 +121,14 @@ const buildSearchFilter = (role: Role, search?: string): Prisma.AppointmentWhere
 
 const orderByMap = {
   date: (order) => [{ slot: { date: order } }],
-  patient: (order) => [
-    { patient: { user: { lastName: order } } },
+  patientFirstName: (order) => [
     { patient: { user: { firstName: order } } },
+    { patient: { user: { lastName: order } } },
     { slot: { date: 'asc' } },
   ],
-  doctor: (order) => [
-    { slot: { doctor: { user: { lastName: order } } } },
-    { slot: { doctor: { user: { firstName: order } } } },
+  patientLastName: (order) => [
+    { patient: { user: { lastName: order } } },
+    { patient: { user: { firstName: order } } },
     { slot: { date: 'asc' } },
   ],
 } satisfies Record<

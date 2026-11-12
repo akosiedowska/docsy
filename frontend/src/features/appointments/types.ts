@@ -73,6 +73,15 @@ export type AppointmentsPage = {
   total: number
 }
 
+export type AppointmentSortBy = 'date' | 'patientFirstName' | 'patientLastName'
+
+export type AppointmentsListParams = {
+  search?: string
+  conducted?: boolean
+  sortBy: AppointmentSortBy
+  sortOrder: 'asc' | 'desc'
+}
+
 export type UpdateAppointmentBody = {
   conducted: boolean
   description: string
