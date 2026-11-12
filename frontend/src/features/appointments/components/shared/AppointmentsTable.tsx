@@ -1,8 +1,6 @@
-import { useEffect, useState } from 'react'
 import { rowSortingFeature, tableFeatures, useTable } from '@tanstack/react-table'
 import type { ColumnDef, OnChangeFn, SortingState } from '@tanstack/react-table'
-import { Box, Center, Group, Select, Table, Text, UnstyledButton } from '@mantine/core'
-import { useIntersection } from '@mantine/hooks'
+import { Center, Group, Select, Table, Text, UnstyledButton } from '@mantine/core'
 import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react'
 
 import { conductedOptions, isConductedFilter } from '../../conductedFilter'
@@ -103,24 +101,16 @@ const AppointmentsTable = ({
     enableSortingRemoval: false,
   })
 
-  const [viewport, setViewport] = useState<HTMLDivElement | null>(null)
-  // The scroll container is the observer root, so rootMargin can trigger loading before the very bottom
-  const { ref: sentinelRef, entry } = useIntersection({
-    root: viewport,
-    rootMargin: '0px 0px 200px 0px',
-  })
-  const isSentinelVisible = entry?.isIntersecting ?? false
-
-  useEffect(() => {
-    if (isSentinelVisible && hasNextPage && !isFetchingNextPage) fetchNextPage()
-  }, [isSentinelVisible, hasNextPage, isFetchingNextPage, fetchNextPage])
+  const handleBottomReached = () => {
+    if (hasNextPage && !isFetchingNextPage) fetchNextPage()
+  }
 
   return (
     <>
       <Table.ScrollContainer
         minWidth={700}
-        maxHeight='calc(100vh - 227px)'
-        scrollAreaProps={{ viewportRef: setViewport }}
+        maxHeight='calc(100vh - 260px)'
+        scrollAreaProps={{ onBottomReached: handleBottomReached }}
       >
         <Table
           highlightOnHover
@@ -202,7 +192,6 @@ const AppointmentsTable = ({
             )}
           </Table.Tbody>
         </Table>
-        <Box ref={sentinelRef} h={1} />
       </Table.ScrollContainer>
       <Text size='sm' c='dimmed'>
         Showing {items.length} of {total}
