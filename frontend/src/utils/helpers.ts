@@ -27,3 +27,5 @@ export const formatDate = (date: string) =>
     month: 'long',
     day: 'numeric',
   })
+
+export const formatShortDate = (date: string) => new Date(date).toLocaleDateString('en-US', {})
