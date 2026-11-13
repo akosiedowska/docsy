@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
 import { type AuthUser } from '../features/auth/types'
+import { useAppointmentsFilterStore } from './appointmentsFilterStore'
 
 type AuthState = {
   user: AuthUser | null
@@ -23,7 +24,11 @@ export const useAuthStore = create<AuthState>()(
       isBootstrapping: true,
       setSession: (user, accessToken) => set({ user, accessToken, isAuthenticated: true }),
       setAccessToken: (accessToken) => set({ accessToken }),
-      clearSession: () => set({ user: null, accessToken: null, isAuthenticated: false }),
+      clearSession: () => {
+        set({ user: null, accessToken: null, isAuthenticated: false })
+        useAppointmentsFilterStore.getState().reset()
+        useAppointmentsFilterStore.getState().setRestoreOnReturn(false)
+      },
       setBootstrapped: () => set({ isBootstrapping: false }),
     }),
     {

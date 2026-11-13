@@ -9,6 +9,7 @@ import { getApiErrorMessage } from '../../api/getApiErrorMesage'
 import { palette } from '../../styles/colors'
 import ButtonLink from '../../components/ui/ButtonLink'
 import { paths } from '../../app/paths'
+import { useAppointmentsFilterStore } from '../../stores/appointmentsFilterStore'
 
 const route = getRouteApi('/_auth/appointments/$appointmentId')
 
@@ -16,6 +17,7 @@ const AppointmentDetailPage = () => {
   const { appointmentId } = route.useParams()
   const location = useLocation()
   const { data: appointment, isLoading, isError, error } = useAppointment(appointmentId)
+  const { setRestoreOnReturn } = useAppointmentsFilterStore()
 
   if (isLoading) return <LoadingSpinner />
   if (isError || !appointment) return <Text c={palette.alert}>{getApiErrorMessage(error)}</Text>
@@ -31,8 +33,9 @@ const AppointmentDetailPage = () => {
           variant='subtle'
           color='gray'
           w='fit-content'
+          onClick={() => setRestoreOnReturn(true)}
         >
-          Back to table
+          Back to results
         </ButtonLink>
       )}
       <AppointmentDetails appointment={appointment} />

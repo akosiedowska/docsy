@@ -6,7 +6,8 @@ import { createLink } from '@tanstack/react-router'
 //   <Button component='a' ref={ref} {...props} />
 // ))
 
-type ButtonLinkProps = ButtonProps & { ref?: React.Ref<HTMLAnchorElement> }
+type ButtonLinkProps = ButtonProps &
+  React.ComponentPropsWithoutRef<'a'> & { ref?: React.Ref<HTMLAnchorElement> }
 
 const ButtonWithLink = ({ ref, ...props }: ButtonLinkProps) => (
   <Button component='a' ref={ref} {...props} />

@@ -108,7 +108,7 @@ const AppointmentsTable = ({
   return (
     <>
       <Table.ScrollContainer
-        minWidth={700}
+        minWidth={800}
         maxHeight='calc(100vh - 260px)'
         scrollAreaProps={{ onBottomReached: handleBottomReached }}
       >
