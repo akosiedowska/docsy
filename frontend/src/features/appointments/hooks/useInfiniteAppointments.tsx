@@ -4,7 +4,7 @@ import { appointmentsKeys } from '../queryKeys'
 import { getAppointmentsPage } from '../api'
 import type { AppointmentsListParams } from '../types'
 
-const PAGE_SIZE = 10
+const PAGE_SIZE = 30
 
 export const useInfiniteAppointments = (params: AppointmentsListParams) => {
   return useInfiniteQuery({
